@@ -32,9 +32,12 @@ module.exports = {
         '4xl': '2rem',
       },
       backgroundImage: {
-        'gradient1': 'linear-gradient(98.37deg, #f89e00 0.99%, #da2f68 100%)',
-        'gradient2': 'linear-gradient(180deg,rgba(4, 21, 45, 0) 0%,#04152d 79.17%)'
-      }
+        'gradient1': 'linear-gradient(98.37deg, #75003b 0.99%, #22083f 100%)',
+        'gradient2': 'linear-gradient(180deg,rgba(4, 21, 45, 0) 0%,#22083f 79.17%)'
+      },
+      boxShadow: {
+        'custom1': '0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px white, 0px 0px 2px white',
+      },
     },
   },
   plugins: [],

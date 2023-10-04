@@ -9,7 +9,8 @@ import "./style.scss";
 import logo from "../../assets/movix-logo.svg";
 
 const Header = () => {
-    const [show, setShow] = useState("show");
+    const [show, setShow] = useState(false);
+    const [beforeScroll, setBeforeScroll] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
     const [mobileMenu, setMobileMenu] = useState(false);
     const [query, setQuery] = useState("");
@@ -17,15 +18,23 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location]);
+
     const controlNavbar = () => {
-        console.log(window.scrollY);
+        // console.log(window.scrollY);
         if (window.scrollY > 100) {
+            setShow(true);
             if (window.scrollY > lastScrollY && !mobileMenu) {
-                setShow(false);
+                setBeforeScroll(false);
             } else {
-                setShow(true);
+                setBeforeScroll(true);
             }
             setLastScrollY(window.scrollY);
+        } else if (window.scrollY < 100) {
+            setBeforeScroll(true);
+            setShow(false);
         }
     };
 
@@ -65,11 +74,11 @@ const Header = () => {
 
     return (
         <header
-            className={`header fixed translate-y-0 w-full h-14 z-10 flex items-center transition-all ${
+            className={`header fixed w-full z-10 flex items-center transition-all ${
                 mobileMenu ? "mobileView bg-black3" : ""
             } ${
-                show ? " backdrop-blur-lg bg-black1/[0.25]" : "-translate-y-16"
-            }`}
+                show ? "backdrop-blur-lg bg-black1/[0.25] h-14" : "h-16 md:h-24"
+            } ${beforeScroll ? "translate-y-0" : "-translate-y-16"}`}
         >
             <div className="w-full max-w-[1200px] my-0 mx-auto py-0 px-5 flex items-center justify-between">
                 <Link
@@ -77,7 +86,7 @@ const Header = () => {
                     className="logo cursor-pointer"
                 >
                     <img
-                        className="h-12"
+                        className="h-8 md:h-12"
                         src={logo}
                         alt=""
                     />
@@ -116,42 +125,51 @@ const Header = () => {
                                 : ""
                         }`}
                     >
-                        <HiOutlineSearch onClick={openSearch} />
+                        <HiOutlineSearch
+                            className="cursor-pointer"
+                            onClick={openSearch}
+                        />
                     </li>
                 </ul>
                 <div className="mobileMenuItems flex md:hidden items-center gap-5">
                     <HiOutlineSearch
-                        className="text-lg text-white"
+                        className="text-lg text-white cursor-pointer"
                         onClick={openSearch}
                     />
                     {mobileMenu ? (
                         <VscChromeClose
-                            className="text-lg text-white"
+                            className="text-lg text-white cursor-pointer"
                             onClick={() => setMobileMenu(false)}
                         />
                     ) : (
                         <SlMenu
-                            className="text-lg text-white"
+                            className="text-lg text-white cursor-pointer"
                             onClick={openMobileMenu}
                         />
                     )}
                 </div>
             </div>
             {showSearch && (
-                <div className="searchBar w-full h-14 bg-white absolute top-14">
+                <div
+                    className={`searchBar w-full bg-white absolute ${
+                        beforeScroll ? "top-0" : "-top-28"
+                    }`}
+                >
                     <div className="w-full max-w-[1200px] my-0 mx-auto py-0 px-5 flex items-center justify-between">
-                        <div className="searchInput flex items-center w-full h-10 mt-2">
+                        <div className="searchInput flex items-center w-full rounded-full bg-white p-[3px] md:p-[5px]">
                             <input
                                 type="text"
                                 placeholder="Search for a movie or tv show...."
                                 onChange={(e) => setQuery(e.target.value)}
                                 onKeyUp={searchQueryHandler}
-                                className="w-full h-12 md:h-14 bg-white outline-none border-none rounded-full px-4 md:px-8 text-sm md:text-xl"
+                                className="w-[calc(100%-40px)] bg-gray-light md:w-[calc(100%-56px)] lg:w-[calc(100%-64px)] h-14 md:h-14 lg:h-16 text-black1 outline-none border-none rounded-l-4xl py-0 px-3 md:px-8 text-sm md:text-lg lg:text-xl"
                             />
-                            <VscChromeClose
-                                className="text-xl shrink-0 ml-2 cursor-pointer"
+                            <div
                                 onClick={() => setShowSearch(false)}
-                            />
+                                className="w-14 md:w-14 lg:w-16 h-14 md:h-14 lg:h-16 bg-gray-light text-black1 outline-none border-none rounded-r-4xl text-sm font-semibold grid items-center justify-center cursor-pointer"
+                            >
+                                <VscChromeClose className="w-6 h-6 cursor-pointer" />
+                            </div>
                         </div>
                     </div>
                 </div>

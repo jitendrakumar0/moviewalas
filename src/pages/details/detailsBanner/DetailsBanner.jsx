@@ -36,9 +36,9 @@ const DetailsBanner = ({ video, crew }) => {
     };
 
     return (
-        <div className="detailsBanner w-full bg-black1 pt-[100px] md:pt-[120px] mb-[50px] md:mb-0 md:min-h-[700px] before:absolute before:inset-0 before:z-[1] z-0 before:bg-gradient1 before:mix-blend-color">
+        <>
             {!loading ? (
-                <>
+                <div className="detailsBanner w-full bg-black1 pt-[70px] md:pt-[100px] mb-[50px] md:mb-0 md:min-h-[700px] before:absolute before:inset-0 before:z-[1] z-0 before:bg-gradient1 before:mix-blend-color">
                     {!!data && (
                         <React.Fragment>
                             <div className="backdrop-img w-full h-full absolute top-0 left-0 opacity-10 overflow-hidden">
@@ -47,9 +47,9 @@ const DetailsBanner = ({ video, crew }) => {
                                     src={url?.backdrop + data?.backdrop_path}
                                 />
                             </div>
-                            <div className="opacity-layer w-full h-[250px] absolute bottom-0 left-0"></div>
+                            <div className="opacity-layer w-full h-[250px] bg-gradient3 absolute bottom-0 left-0 z-[1]"></div>
                             <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 flex items-center justify-between relative z-[1]">
-                                <div className="content flex relative flex-col md:flex-row gap-[25px] md:gap-[50px]">
+                                <div className="content flex relative flex-col md:flex-row gap-[10px] md:gap-[50px]">
                                     <div className="left shrink-0 w-full md:max-w-[350px]">
                                         {data?.poster_path ? (
                                             <Img
@@ -66,64 +66,74 @@ const DetailsBanner = ({ video, crew }) => {
                                             />
                                         )}
                                     </div>
-                                    <div className="right text-white">
-                                        <div className="title font-bold text-[28px] md:text-[34px] leading-[40px] md:leading-[44px]">
+                                    <div className="right text-white shrink-1">
+                                        <div className="title font-bold text-[20px] md:text-[34px] leading-[40px] md:leading-[44px]">
                                             {`${
                                                 data?.name || data?.title
                                             } (${dayjs(
                                                 data?.release_date
                                             ).format("YYYY")})`}
                                         </div>
-                                        <div className="subtitle text-base md:text-xl leading-6 md:leading-7 mb-[15px] italic text-white/[0.6]">
+                                        <div className="subtitle text-sm md:text-xl leading-6 md:leading-7 mb-[15px] italic text-white/[0.6]">
                                             {data?.tagline}
                                         </div>
-                                        <Genres data={_genres} />
+                                        <Genres
+                                            data={_genres}
+                                            classNameGenres={`genres flex gap-[5px] mb-4 md:mb-[25px] flex-wrap flex-row`}
+                                            classNameGenre={`genre backdrop-blur-xl border border-gray py-[1px] px-[5px] text-xs md:text-sm rounded-[4px] text-white whitespace-nowrap`}
+                                        />
 
-                                        <div className="row flex items-center gap-[25px] mb-[25px]">
+                                        <div className="row flex items-center gap-3 md:gap-[25px] mb-[25px]">
                                             <CircleRating
-                                                className={`w-7 md:w-12 h-w-7 md:h-12 shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px] bg-black2`}
+                                                className={`w-7 md:w-12 h-7 md:h-12 shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px] bg-black2`}
                                                 rating={data?.vote_average.toFixed(
                                                     1
                                                 )}
                                             />
                                             <div
-                                                className="playbtn flex items-center gap-5 cursor-pointer hover:text-pink"
+                                                className="playbtn flex items-center gap-2 md:gap-5 cursor-pointer hover:text-pink"
                                                 onClick={() => {
                                                     setShow(true);
                                                     setVideoId(video?.key);
                                                 }}
                                             >
-                                                <PlayIcon className="w-7 md:w-12 h-w-7 md:h-12" />{" "}
-                                                <span className="text text-lg transition-[all] duration-[0.7s]">
+                                                <PlayIcon className="w-6 md:w-11 h-6 md:h-11" />{" "}
+                                                <span className="text text-sm md:text-base font-semibold transition-[all] duration-[0.7s]">
                                                     Watch Trailer
                                                 </span>
                                             </div>
                                         </div>
                                         <div className="overview mb-[25px]">
-                                            <div className="heading text-2xl mb-[10px]">
+                                            <div className="heading text-base md:text-lg mb-[10px] font-bold">
                                                 Overview
                                             </div>
-                                            <div className="description leading-6 md:pr-[100px]">
+                                            <div className="description text-xs md:text-sm leading-6 md:pr-[100px]">
                                                 {data?.overview}
                                             </div>
                                         </div>
-                                        <div className="info py-[15px] px-0 flex border-b border-solid border-b-[rgba(255,_255,_255,_0.1)]">
+                                        <div className="info py-[15px] px-0 flex border-b border-solid gap-3 border-b-[rgba(255,_255,_255,_0.1)]">
                                             {data?.status && (
-                                                <div className="infoItem mr-[10px] flex-row flex-wrap">
-                                                    <span className="text mb-[10px] leading-6 bold font-semibold opacity-100">
-                                                        Status:{" "}
+                                                <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
+                                                    <span className="text xl:mb-[10px] max-lg:flex text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
+                                                        Status{" "}
+                                                        <span className="hidden md:inline-block">
+                                                            :
+                                                        </span>{" "}
                                                     </span>
-                                                    <span className="text mb-[10px] opacity-50 leading-6">
+                                                    <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
                                                         {data?.status}
                                                     </span>
                                                 </div>
                                             )}
                                             {data?.release_date && (
-                                                <div className="infoItem mr-[10px] flex-row flex-wrap">
-                                                    <span className="text mb-[10px] leading-6 bold font-semibold opacity-100">
-                                                        Release Date:{" "}
+                                                <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
+                                                    <span className="text lg:mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
+                                                        Release Date{" "}
+                                                        <span className="hidden md:inline-block">
+                                                            :
+                                                        </span>{" "}
                                                     </span>
-                                                    <span className="text mb-[10px] opacity-50 leading-6">
+                                                    <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
                                                         {dayjs(
                                                             data?.release_date
                                                         ).format("MMM D, YYYY")}
@@ -131,11 +141,14 @@ const DetailsBanner = ({ video, crew }) => {
                                                 </div>
                                             )}
                                             {data?.runtime && (
-                                                <div className="infoItem mr-[10px] flex-row flex-wrap">
-                                                    <span className="text mb-[10px] leading-6 bold font-semibold opacity-100">
-                                                        Runtime:{" "}
+                                                <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
+                                                    <span className="text lg:mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
+                                                        Runtime{" "}
+                                                        <span className="hidden md:inline-block">
+                                                            :
+                                                        </span>{" "}
                                                     </span>
-                                                    <span className="text mb-[10px] opacity-50 leading-6">
+                                                    <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
                                                         {toHoursAndMinutes(
                                                             data.runtime
                                                         )}
@@ -144,11 +157,11 @@ const DetailsBanner = ({ video, crew }) => {
                                             )}
                                         </div>
                                         {director?.length > 0 && (
-                                            <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-[15px] px-0">
-                                                <span className="text bold">
+                                            <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
+                                                <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
                                                     Director:{" "}
                                                 </span>
-                                                <span className="text">
+                                                <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
                                                     {director.map((d, i) => (
                                                         <span key={i}>
                                                             {d?.name}
@@ -161,11 +174,11 @@ const DetailsBanner = ({ video, crew }) => {
                                             </div>
                                         )}
                                         {writer?.length > 0 && (
-                                            <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-[15px] px-0">
-                                                <span className="text bold">
+                                            <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
+                                                <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
                                                     Writer:{" "}
                                                 </span>
-                                                <span className="text">
+                                                <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
                                                     {writer.map((d, i) => (
                                                         <span key={i}>
                                                             {d?.name}
@@ -178,11 +191,11 @@ const DetailsBanner = ({ video, crew }) => {
                                             </div>
                                         )}
                                         {data?.created_by?.length > 0 && (
-                                            <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-[15px] px-0">
-                                                <span className="text bold">
+                                            <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
+                                                <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
                                                     Creator:{" "}
                                                 </span>
-                                                <span className="text">
+                                                <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
                                                     {data?.created_by.map(
                                                         (d, i) => (
                                                             <span key={i}>
@@ -200,33 +213,35 @@ const DetailsBanner = ({ video, crew }) => {
                                         )}
                                     </div>
                                 </div>
-                                <VideoPopup
-                                    show={show}
-                                    setShow={setShow}
-                                    videoId={videoId}
-                                    setVideoId={setVideoId}
-                                />
                             </div>
+                            <VideoPopup
+                                show={show}
+                                setShow={setShow}
+                                videoId={videoId}
+                                setVideoId={setVideoId}
+                            />
                         </React.Fragment>
                     )}
-                </>
+                </div>
             ) : (
-                <div className="detailsBannerSkeleton flex relative flex-col md:flex-row gap-[25px] md:gap-[50px]">
-                    <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 flex items-center justify-between gap-6">
-                        <div className="left shrink-0 w-full block rounded-xl aspect-[1/1.5] md:max-w-[350px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                        <div className="right w-full">
-                            <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                            <div className="row flex items-center gap-[25px] w-3/4 h-[25px] mb-12 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                            <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                            <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                            <div className="row flex items-center gap-[25px] w-2/4 h-[25px] mb-12 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                            <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                            <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                <div className="detailsBanner w-full bg-black1 pt-[70px] md:pt-[100px] mb-[50px] md:mb-0 md:min-h-[700px]">
+                    <div className="detailsBannerSkeleton flex relative flex-col md:flex-row gap-[25px] md:gap-[50px]">
+                        <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 flex items-center justify-between gap-6">
+                            <div className="left shrink-0 w-full block rounded-xl aspect-[1/1.5] md:max-w-[350px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                            <div className="right w-full">
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                                <div className="row flex items-center gap-[25px] w-3/4 h-[25px] mb-12 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                                <div className="row flex items-center gap-[25px] w-2/4 h-[25px] mb-12 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 

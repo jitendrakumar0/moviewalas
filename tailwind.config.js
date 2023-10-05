@@ -33,7 +33,8 @@ module.exports = {
       },
       backgroundImage: {
         'gradient1': 'linear-gradient(98.37deg, #75003b 0.99%, #22083f 100%)',
-        'gradient2': 'linear-gradient(180deg,rgba(4, 21, 45, 0) 0%,#22083f 79.17%)'
+        'gradient2': 'linear-gradient(180deg,rgba(4, 21, 45, 0) 0%,#22083f 79.17%)',
+        'gradient3': 'linear-gradient(180deg,rgba(4, 21, 45, 0) 0%,#04152d 79.17%)'
       },
       boxShadow: {
         'custom1': '0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px white, 0px 0px 2px white',

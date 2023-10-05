@@ -18,7 +18,7 @@ const App = () => {
     const dispatch = useDispatch();
 
     const { url } = useSelector((state) => state.home);
-    console.log(url);
+    // console.log(url);
 
     useEffect(() => {
         fetchApiConfig();
@@ -27,7 +27,7 @@ const App = () => {
     }, []);
     const fetchApiConfig = () => {
         fetchDataFromApi("/configuration").then((res) => {
-            console.log(res);
+            // console.log(res);
             const url = {
                 backdrop: res.images.secure_base_url + "original",
                 poster: res.images.secure_base_url + "original",
@@ -46,7 +46,7 @@ const App = () => {
         });
 
         const data = await Promise.all(promises);
-        console.log(data);
+        // console.log(data);
         data.map(({ genres }) => {
             return genres.map((item) => (allGenres[item.id] = item));
         });
@@ -55,7 +55,7 @@ const App = () => {
     };
     return (
         <BrowserRouter>
-            <div className="hidden bg-black1"></div>
+            <div className="hidden bg-black1 select-none selection:bg-[transparent] selection:text-[transparent]"></div>
             <Header />
             <Routes>
                 <Route

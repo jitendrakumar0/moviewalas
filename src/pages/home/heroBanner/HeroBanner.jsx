@@ -21,7 +21,7 @@ const HeroBanner = () => {
             url?.backdrop +
             data?.results[Math.floor(Math.random() * 20)]?.backdrop_path;
         setBackground(bg);
-        console.log(bg);
+        // console.log(bg);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
@@ -39,10 +39,12 @@ const HeroBanner = () => {
     return (
         <div className="heroBanner w-full h-[450px] md:h-[700px] bg-black1 flex items-center relative">
             <div className="backdrop-img w-full h-full absolute top-0 left-0 opacity-40 overflow-hidden before:absolute before:inset-0 before:z-[1] z-0 before:bg-gradient1 before:mix-blend-color">
-                <Img
-                    className={`w-full h-full object-cover object-center`}
-                    src={background}
-                />
+                {!loading && (
+                    <Img
+                        className={`w-full h-full object-cover object-center`}
+                        src={background}
+                    />
+                )}
             </div>
 
             <div className="opacity-layer w-full h-[250px] absolute bottom-0 left-0 bg-gradient2"></div>
@@ -62,7 +64,7 @@ const HeroBanner = () => {
                             placeholder="Search for a movie or tv show...."
                             onChange={(e) => setQuery(e.target.value)}
                             onKeyUp={searchQueryHandler}
-                            className="w-[calc(100%-100px)] bg-gray-light md:w-[calc(100%-150px)] h-10 md:h-14 lg:h-16 text-black1 outline-none border-none rounded-l-4xl py-0 px-3 md:px-8 text-sm md:text-lg lg:text-xl"
+                            className="w-[calc(100%-100px)] bg-gray-light md:w-[calc(100%-150px)] h-10 md:h-14 lg:h-16 text-black1 outline-none border-none rounded-l-4xl py-0 px-3 md:px-8 text-sm md:text-lg lg:text-xl select-none"
                         />
                         <button
                             onClick={searchQueryBtn}

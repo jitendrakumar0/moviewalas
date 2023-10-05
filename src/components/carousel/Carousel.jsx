@@ -15,10 +15,10 @@ import CircleRating from "../circleRating/CircleRating";
 import Genres from "../genres/Genres";
 
 const Carousel = ({ data, loading, endpoint, title }) => {
-    const carouselContainer = useRef();
     const { url } = useSelector((state) => state.home);
     const navigate = useNavigate();
 
+    const carouselContainer = useRef();
     const navigation = (dir) => {
         const container = carouselContainer.current;
         const scrollAmount =
@@ -35,12 +35,14 @@ const Carousel = ({ data, loading, endpoint, title }) => {
     const skItem = () => {
         return (
             <div className="skeletonItem w-[125px] md:w-[calc(25%-15px)] lg:w-[calc(16.66%-16px)] shrink-0">
-                <div className="posterBlock skeleton relative overflow-hidden bg-[#0a2955] after:absolute after:inset-0 after:translate-x-[-100%] rounded-xl w-full aspect-[1/1.8] mb-7">
-                    <div className="textBlock flex flex-col">
-                        <div className="title skeleton relative overflow-hidden bg-[#0a2955] after:absolute after:inset-0 after:translate-x-[-100%] w-full h-5 mb-3"></div>
-                        <div className="date skeleton relative overflow-hidden bg-[#0a2955] after:absolute after:inset-0 after:translate-x-[-100%] w-[75%] h-5"></div>
+                <div className="posterBlock skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] rounded-xl w-full aspect-[1/1.5] mb-3">
+                    <div className="textBlock flex flex-col px-3">
+                        <div className="title skeleton relative rounded-lg overflow-hidden bg-black1 after:absolute after:inset-0 after:translate-x-[-100%] w-full h-5 my-3"></div>
+                        <div className="date skeleton relative rounded-lg overflow-hidden bg-black1 after:absolute after:inset-0 after:translate-x-[-100%] w-[75%] h-5"></div>
                     </div>
                 </div>
+                <div className="skeleton relative rounded-lg overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] w-[75%] h-3"></div>
+                <div className="skeleton relative rounded-lg overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] w-[90%] mt-2 h-3"></div>
             </div>
         );
     };
@@ -52,7 +54,9 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                         {data?.length > 0 ? (
                             <>
                                 {title && (
-                                    <div className="carouselTitle">{title}</div>
+                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4">
+                                        {title}
+                                    </div>
                                 )}
                                 <BsFillArrowLeftCircleFill
                                     className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block hover:opacity-80"
@@ -99,6 +103,8 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                                             0,
                                                             2
                                                         )}
+                                                        classNameGenres={`genres flex gap-[5px] mb-[25px] flex-wrap flex-row`}
+                                                        classNameGenre={`genre bg-black3 border border-gray py-[1px] px-[5px] text-[10px] rounded-[4px] text-white whitespace-nowrap`}
                                                     />
                                                 </div>
                                                 <div className="textBlock text-white flex flex-col">
@@ -122,14 +128,17 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                         )}
                     </>
                 ) : (
-                    <div className="loadingSkeleton scroll-pl-6 snap-x flex gap-2 md:gap-5 lg:gap-[19px] overflow-y-hidden md:overflow-hidden -mr-5 md:m-0 -ml-5 px-5 md:p-0">
-                        {skItem()}
-                        {skItem()}
-                        {skItem()}
-                        {skItem()}
-                        {skItem()}
-                        {skItem()}
-                    </div>
+                    <>
+                        <div className="sectionHeading w-28 text-sm md:text-lg lg:text-2xl text-white font-bold mb-4 h-6 rounded-[10px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                        <div className="loadingSkeleton scroll-pl-6 snap-x flex gap-2 md:gap-5 lg:gap-[19px] overflow-y-hidden md:overflow-hidden -mr-5 md:m-0 -ml-5 px-5 md:p-0">
+                            {skItem()}
+                            {skItem()}
+                            {skItem()}
+                            {skItem()}
+                            {skItem()}
+                            {skItem()}
+                        </div>
+                    </>
                 )}
             </div>
         </div>

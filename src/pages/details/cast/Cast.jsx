@@ -48,32 +48,47 @@ const Cast = ({ data, loading }) => {
                                         Top Cast
                                     </div>
                                     <BsFillArrowLeftCircleFill
-                                        className="carouselLeftNav arrow left-[20px] -translate-x-2/4 text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer z-[1] hidden md:block hover:scale-[1.08] ring-8 ring-offset ring-black1"
+                                        className="carouselLeftNav arrow left-[20px] -translate-x-2/4 text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer z-[1] hidden md:block md:hover:scale-[1.08] ring-8 ring-offset ring-black1"
                                         onClick={() => navigation("left")}
                                     />
                                     <BsFillArrowRightCircleFill
-                                        className="carouselRightNav arrow right-[20px] translate-x-2/4 text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer z-[1] hidden md:block hover:scale-[1.08] ring-8 ring-offset ring-black1"
+                                        className="carouselRightNav arrow right-[20px] translate-x-2/4 text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer z-[1] hidden md:block md:hover:scale-[1.08] ring-8 ring-offset ring-black1"
                                         onClick={() => navigation("right")}
                                     />
                                     <div
-                                        className="listItems flex gap-4 sm:gap-6 overflow-y-hidden -mx-5 md:m-0 px-5 py-0 md:p-0"
+                                        className="listItems scroll-pl-6 snap-x flex gap-4 sm:gap-6 overflow-y-hidden md:overflow-hidden -mx-5 md:m-0 px-5 py-0 md:p-0"
                                         ref={carouselContainer}
                                     >
                                         {data?.map((item) => {
-                                            let imgUrl = item?.profile_path
-                                                ? url?.profile +
-                                                  item?.profile_path
-                                                : avatar;
                                             return (
                                                 <div
                                                     key={item?.id}
-                                                    className="listItem text-white w-[125px] sm:w-[20%] md:w-[17.7%] lg:w-[14.95%] xl:w-[12.5%] shrink-0"
+                                                    className="listItem snap-start text-white w-[125px] sm:w-[20%] md:w-[17.7%] lg:w-[14.95%] xl:w-[12.5%] shrink-0"
                                                 >
                                                     <div className="profileImg w-full aspect-[20/30] rounded-t-2xl overflow-hidden mb-[15px] md:mb-[25px] relative">
                                                         <div className="opacity-layer w-full h-[60px] bg-gradient3 absolute bottom-0 left-0 z-[1]"></div>
                                                         <Img
-                                                            src={imgUrl}
                                                             className={`w-full h-full object-cover object-top block`}
+                                                            width={"141"}
+                                                            height={"226"}
+                                                            alt={item?.name}
+                                                            src={
+                                                                item?.profile_path
+                                                                    ? url.profile_sizes_w45 +
+                                                                      item?.profile_path
+                                                                    : avatar
+                                                            }
+                                                            srcSet={`${
+                                                                item?.profile_path
+                                                                    ? url.profile_sizes_w45 +
+                                                                      item.profile_path
+                                                                    : avatar
+                                                            } 100w, ${
+                                                                item?.profile_path
+                                                                    ? url.profile_sizes_w185 +
+                                                                      item.profile_path
+                                                                    : avatar
+                                                            } 250w`}
                                                         />
                                                     </div>
                                                     <div className="name text-xs md:text-base leading-5 md:leading-6 font-semibold -mt-10 z-[1] relative">

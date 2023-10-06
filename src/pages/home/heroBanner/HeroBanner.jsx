@@ -8,7 +8,7 @@ import useFetch from "../../../hooks/useFetch";
 import Img from "../../../components/lazyLoadImage/Img";
 
 const HeroBanner = () => {
-    const [background, setBackground] = useState("");
+    const [bannerInfo, setBannerInfo] = useState("");
     const [query, setQuery] = useState("");
     const navigate = useNavigate();
     const { url } = useSelector((state) => state.home);
@@ -17,11 +17,11 @@ const HeroBanner = () => {
     const { data, loading } = useFetch("/movie/upcoming");
 
     useEffect(() => {
-        const bg =
-            url?.backdrop +
-            data?.results[Math.floor(Math.random() * 20)]?.backdrop_path;
-        setBackground(bg);
-        // console.log(bg);
+        const BannerData = data?.results?.[Math.floor(Math.random() * 20)];
+        setBannerInfo(BannerData);
+        if (BannerData) {
+            console.log(BannerData);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
@@ -42,7 +42,19 @@ const HeroBanner = () => {
                 {!loading && (
                     <Img
                         className={`w-full h-full object-cover object-center`}
-                        src={background}
+                        src={
+                            url?.backdrop_sizes_w1280 +
+                            bannerInfo?.backdrop_path
+                        }
+                        srcSet={`${
+                            url?.backdrop_sizes_w300 + bannerInfo?.backdrop_path
+                        } 400w, ${
+                            url?.backdrop_sizes_w780 + bannerInfo?.backdrop_path
+                        } 900w, ${
+                            url?.backdrop_sizes_w1280 +
+                            bannerInfo?.backdrop_path
+                        } 1200w`}
+                        alt={bannerInfo?.title}
                     />
                 )}
             </div>

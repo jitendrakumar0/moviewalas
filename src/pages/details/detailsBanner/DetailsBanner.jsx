@@ -44,27 +44,53 @@ const DetailsBanner = ({ video, crew }) => {
                             <div className="backdrop-img w-full h-full absolute top-0 left-0 opacity-10 overflow-hidden">
                                 <Img
                                     className={`w-full h-full object-cover object-center`}
-                                    src={url?.backdrop + data?.backdrop_path}
+                                    width={`1280`}
+                                    height={`720`}
+                                    alt={data?.name || data?.title}
+                                    src={
+                                        data?.backdrop_path
+                                            ? url.backdrop_sizes_w300 +
+                                              data?.backdrop_path
+                                            : PosterFallback
+                                    }
+                                    srcSet={`${
+                                        url?.backdrop_sizes_w300 +
+                                        data?.backdrop_path
+                                    } 250w, ${
+                                        url?.backdrop_sizes_w780 +
+                                        data?.backdrop_path
+                                    } 400w, ${
+                                        url?.backdrop_sizes_w1280 +
+                                        data?.backdrop_path
+                                    } 600w`}
                                 />
                             </div>
                             <div className="opacity-layer w-full h-[250px] bg-gradient3 absolute bottom-0 left-0 z-[1]"></div>
                             <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 flex items-center justify-between relative z-[1]">
                                 <div className="content flex relative flex-col md:flex-row gap-[10px] md:gap-[50px]">
                                     <div className="left shrink-0 w-full md:max-w-[350px]">
-                                        {data?.poster_path ? (
-                                            <Img
-                                                className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
-                                                src={
-                                                    url?.backdrop +
-                                                    data?.poster_path
-                                                }
-                                            />
-                                        ) : (
-                                            <Img
-                                                className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
-                                                src={PosterFallback}
-                                            />
-                                        )}
+                                        <Img
+                                            className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
+                                            width={`400`}
+                                            height={`600`}
+                                            alt={data?.name || data?.title}
+                                            src={
+                                                data?.poster_path
+                                                    ? url.poster_sizes_w92 +
+                                                      data?.poster_path
+                                                    : PosterFallback
+                                            }
+                                            srcSet={`${
+                                                url?.poster_sizes_w185 +
+                                                data?.poster_path
+                                            } 250w, ${
+                                                url?.poster_sizes_w342 +
+                                                data?.poster_path
+                                            } 400w, ${
+                                                url?.poster_sizes_w500 +
+                                                data?.poster_path
+                                            } 600w`}
+                                        />
                                     </div>
                                     <div className="right text-white shrink-1">
                                         <div className="title font-bold text-[20px] md:text-[34px] leading-[40px] md:leading-[44px]">
@@ -91,7 +117,7 @@ const DetailsBanner = ({ video, crew }) => {
                                                 )}
                                             />
                                             <div
-                                                className="playbtn flex items-center gap-2 md:gap-5 cursor-pointer hover:text-pink"
+                                                className="playbtn flex items-center gap-2 md:gap-5 cursor-pointer md:hover:text-blue"
                                                 onClick={() => {
                                                     setShow(true);
                                                     setVideoId(video?.key);

@@ -99,7 +99,7 @@ const Header = () => {
                     }`}
                 >
                     <li
-                        className={`menuItem h-14 flex items-center my-0 mx-4 text-white hover:text-white/[0.80] font-medium relative cursor-pointer ${
+                        className={`menuItem h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
                             mobileMenu
                                 ? "text-xl w-full h-auto py-4 px-5 m-0 flex-col items-start"
                                 : ""
@@ -109,7 +109,7 @@ const Header = () => {
                         Movies
                     </li>
                     <li
-                        className={`menuItem h-14 flex items-center my-0 mx-4 text-white hover:text-white/[0.80] font-medium relative cursor-pointer ${
+                        className={`menuItem h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
                             mobileMenu
                                 ? "text-xl w-full h-auto py-4 px-5 m-0 flex-col items-start"
                                 : ""
@@ -119,7 +119,7 @@ const Header = () => {
                         TV Shows
                     </li>
                     <li
-                        className={`menuItem h-14 flex items-center my-0 mx-4 text-white hover:text-white/[0.80] font-medium relative cursor-pointer ${
+                        className={`menuItem h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
                             mobileMenu
                                 ? "text-xl w-full h-auto py-4 px-5 m-0 flex-col items-start"
                                 : ""

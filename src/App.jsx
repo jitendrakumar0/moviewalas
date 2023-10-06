@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { fetchDataFromApi } from "./utils/api";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getApiConfigration, getGenres } from "./store/homeSlice";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
@@ -17,7 +17,7 @@ import PageNotFound from "./pages/404/PageNotFound";
 const App = () => {
     const dispatch = useDispatch();
 
-    const { url } = useSelector((state) => state.home);
+    // const { url } = useSelector((state) => state.home);
     // console.log(url);
 
     useEffect(() => {
@@ -27,12 +27,17 @@ const App = () => {
     }, []);
     const fetchApiConfig = () => {
         fetchDataFromApi("/configuration").then((res) => {
-            // console.log(res);
-            const url = {
-                backdrop: res.images.secure_base_url + "original",
-                poster: res.images.secure_base_url + "original",
-                profile: res.images.secure_base_url + "original",
-            };
+            const url = {};
+            for (let config in res?.images) {
+                if (Array.isArray(res?.images[config])) {
+                    for (let data of res?.images[config]) {
+                        url[
+                            `${config}_${data}`
+                        ] = `${res?.images?.secure_base_url}${data}`;
+                    }
+                }
+            }
+            console.log(url);
             dispatch(getApiConfigration(url));
         });
     };

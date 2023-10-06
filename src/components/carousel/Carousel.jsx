@@ -59,11 +59,11 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                     </div>
                                 )}
                                 <BsFillArrowLeftCircleFill
-                                    className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block hover:opacity-80"
+                                    className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
                                     onClick={() => navigation("left")}
                                 />
                                 <BsFillArrowRightCircleFill
-                                    className="carouselRightNav arrow right-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block hover:opacity-80"
+                                    className="carouselRightNav arrow right-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
                                     onClick={() => navigation("right")}
                                 />
                                 <div
@@ -71,9 +71,6 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                     ref={carouselContainer}
                                 >
                                     {data?.map((item) => {
-                                        const posterUrl = item?.poster_path
-                                            ? url?.poster + item?.poster_path
-                                            : PosterFallback;
                                         return (
                                             <div
                                                 key={item?.id}
@@ -89,7 +86,33 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                             >
                                                 <div className="posterBlock relative w-full aspect-[1/1.5] bg-cover bg-center mb-7 flex items-end justify-between p-2">
                                                     <Img
-                                                        src={posterUrl}
+                                                        src={
+                                                            item.poster_path
+                                                                ? url.poster_sizes_w185 +
+                                                                  item.poster_path
+                                                                : PosterFallback
+                                                        }
+                                                        srcSet={`${
+                                                            item.poster_path
+                                                                ? url.poster_sizes_w92 +
+                                                                  item.poster_path
+                                                                : PosterFallback
+                                                        } 380w, ${
+                                                            item.poster_path
+                                                                ? url.poster_sizes_w154 +
+                                                                  item.poster_path
+                                                                : PosterFallback
+                                                        } 650w, ${
+                                                            item.poster_path
+                                                                ? url.poster_sizes_w185 +
+                                                                  item.poster_path
+                                                                : PosterFallback
+                                                        } 1280w`}
+                                                        width={"196"}
+                                                        height={"294"}
+                                                        alt={
+                                                            "movie poster image"
+                                                        }
                                                         className="w-full h-full object-cover object-center"
                                                     />
                                                     <CircleRating

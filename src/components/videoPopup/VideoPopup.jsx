@@ -21,7 +21,7 @@ const VideoPopup = ({ show, setShow, videoId, setVideoId }) => {
             ></div>
             <div className="videoPlayer relative max-w-[800px] w-[calc(100%-30px)] md:w-full aspect-[16/9] scale-[0.2] duration-[250ms] transition-[transform] group-[]:scale-100 rounded-2xl p-2 md:p-4 backdrop-blur-2xl shadow-custom1">
                 <span
-                    className="closeBtn absolute w-8 h-8 md:top-0 max-md:bottom-0 max-md:left-0 right-0 m-auto translate-x-0 md:translate-x-2/4 translate-y-10 md:-translate-y-2/4 text-white cursor-pointer bg-black1 rounded-full hover:scale-[1.2] transition-all duration-75"
+                    className="closeBtn absolute w-8 h-8 md:top-0 max-md:bottom-0 max-md:left-0 right-0 m-auto translate-x-0 md:translate-x-2/4 translate-y-10 md:-translate-y-2/4 text-white cursor-pointer bg-black1 rounded-full md:hover:scale-[1.2] transition-all duration-75"
                     onClick={hidePopup}
                 >
                     <AiOutlineCloseCircle className="w-full h-full" />

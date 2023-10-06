@@ -50,21 +50,21 @@ const VideosSection = ({ data, loading }) => {
                                         Official Videos
                                     </div>
                                     <BsFillArrowLeftCircleFill
-                                        className="carouselLeftNav arrow left-[20px] -translate-x-2/4 text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer z-[1] hidden md:block hover:scale-[1.08] ring-8 ring-offset ring-black1"
+                                        className="carouselLeftNav arrow left-[20px] -translate-x-2/4 text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer z-[1] hidden md:block md:hover:scale-[1.08] ring-8 ring-offset ring-black1"
                                         onClick={() => navigation("left")}
                                     />
                                     <BsFillArrowRightCircleFill
-                                        className="carouselRightNav arrow right-[20px] translate-x-2/4 text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer z-[1] hidden md:block hover:scale-[1.08] ring-8 ring-offset ring-black1"
+                                        className="carouselRightNav arrow right-[20px] translate-x-2/4 text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer z-[1] hidden md:block md:hover:scale-[1.08] ring-8 ring-offset ring-black1"
                                         onClick={() => navigation("right")}
                                     />
                                     <div
-                                        className="videos flex gap-[10px] md:gap-[20px] overflow-x-auto -mx-5 md:m-0 py-0 md:py-2 px-5 md:px-2"
+                                        className="videos scroll-pl-6 snap-x flex gap-[10px] md:gap-[20px] overflow-y-hidden md:overflow-hidden -mx-5 md:m-0 py-0 md:py-2 px-5 md:px-2"
                                         ref={carouselContainer}
                                     >
                                         {data?.results?.map((video) => (
                                             <div
                                                 key={video?.id}
-                                                className="videoItem w-[180px] sm:w-[200px] md:w-1/4 shrink-0 cursor-pointer"
+                                                className="videoItem snap-start w-[180px] sm:w-[200px] md:w-1/4 shrink-0 cursor-pointer"
                                                 onClick={() => {
                                                     setVideoId(video?.key);
                                                     setShow(true);

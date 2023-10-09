@@ -2,8 +2,6 @@ import React from "react";
 import ReactPlayer from "react-player/lazy";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
-import "./style.scss";
-
 const VideoPopup = ({ show, setShow, videoId, setVideoId }) => {
     const hidePopup = () => {
         setShow(false);

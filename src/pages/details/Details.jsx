@@ -1,5 +1,4 @@
 import React from "react";
-import "./style.scss";
 
 import useFetch from "../../hooks/useFetch";
 import { useParams } from "react-router-dom";
@@ -27,8 +26,8 @@ const Details = () => {
                 loading={creditsLoading}
             />
             <VideosSection
-                data={data}
-                loading={loading}
+                datas={data}
+                loadings={loading}
             />
             <Similar
                 mediaType={mediaType}

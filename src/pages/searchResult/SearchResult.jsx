@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { fetchDataFromApi } from "../../utils/api";
-import noResults from "../../assets/no-results.png";
+// import noResults from "../../assets/no-results.png";
 import Spinner from "../../components/spinner/Spinner";
-import "./style.scss";
+
 import MovieCard from "../../components/movieCard/MovieCard";
 const SearchResult = ({ websiteName }) => {
     const [data, setData] = useState(null);
@@ -12,16 +12,12 @@ const SearchResult = ({ websiteName }) => {
     const [loading, setLoading] = useState(false);
     const { query } = useParams();
 
-    // console.log(pageNum)
-
     const fetchInitialData = () => {
-        console.log(pageNum);
         setLoading(true);
         fetchDataFromApi(`/search/multi?query=${query}&page=${pageNum}`).then(
             (res) => {
-                setData(res);
-                console.log("fetchinitialdata");
                 setPageNum((prev) => prev + 1);
+                setData(res);
                 setLoading(false);
             }
         );
@@ -38,38 +34,33 @@ const SearchResult = ({ websiteName }) => {
                 } else {
                     setData(res);
                 }
-                console.log("fetchnextdata");
                 setPageNum((prev) => prev + 1);
-                console.log(pageNum);
             }
         );
     };
 
     useEffect(() => {
-        console.log("useeffect");
         setPageNum(1);
         fetchInitialData();
     }, [query]);
 
-    console.log(data);
-
     return (
         <>
-            <section className="searchResultsPage">
+            <section className="searchResultsPage min-h-[700px] pt-[100px]">
                 {loading && <Spinner initial={true} />}
                 {!loading && (
                     <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 relative">
                         {data?.results?.length > 0 ? (
                             <>
-                                <div className="pageTitle">
-                                    {`Search ${
-                                        data?.total_results > 1
-                                            ? "results"
-                                            : "result"
-                                    } of ${query}`}
+                                <div className="carouselTitle text-sm md:text-lg lg:text-2xl text-white font-semibold mb-4">
+                                    Search{" "}
+                                    {data?.total_results > 1
+                                        ? "results"
+                                        : "result"}{" "}
+                                    of <b>"{query}"</b>
                                 </div>
                                 <InfiniteScroll
-                                    className="content"
+                                    className="content grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-y-10 gap-x-4 h-auto overflow-y-auto mb-12"
                                     dataLength={data?.results?.length || []}
                                     next={fetchNextData}
                                     hasMore={pageNum <= data?.total_pages}
@@ -79,6 +70,7 @@ const SearchResult = ({ websiteName }) => {
                                         // if(item.media_type === "person") return;
                                         return (
                                             <MovieCard
+                                                className={`w-full shrink-0`}
                                                 key={index}
                                                 data={item}
                                                 fromSearch={true}
@@ -89,7 +81,7 @@ const SearchResult = ({ websiteName }) => {
                             </>
                         ) : (
                             <>
-                                <div className="col-12 text-white">
+                                <div className="text-white">
                                     No Record Found
                                 </div>
                             </>

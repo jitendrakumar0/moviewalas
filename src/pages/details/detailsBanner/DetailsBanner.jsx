@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 
-import "./style.scss";
-
 import useFetch from "../../../hooks/useFetch";
 import Genres from "../../../components/genres/Genres";
 import CircleRating from "../../../components/circleRating/CircleRating";
@@ -21,7 +19,7 @@ const DetailsBanner = ({ video, crew }) => {
 
     const { url } = useSelector((state) => state.home);
 
-    const _genres = data?.genres.map((g) => g?.id);
+    const _genres = data?.genres?.map((g) => g?.id);
 
     const director = crew?.filter((f) => f?.job === "Director");
     const writer = crew?.filter(
@@ -105,14 +103,14 @@ const DetailsBanner = ({ video, crew }) => {
                                         </div>
                                         <Genres
                                             data={_genres}
-                                            classNameGenres={`genres flex gap-[5px] mb-4 md:mb-[25px] flex-wrap flex-row`}
+                                            classNameGenres={`genres hidden md:flex gap-[5px] mb-4 md:mb-[25px] flex-wrap flex-row`}
                                             classNameGenre={`genre backdrop-blur-xl border border-gray py-[1px] px-[5px] text-xs md:text-sm rounded-[4px] text-white whitespace-nowrap`}
                                         />
 
                                         <div className="row flex items-center gap-3 md:gap-[25px] mb-[25px]">
                                             <CircleRating
                                                 className={`w-7 md:w-12 h-7 md:h-12 shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px] bg-black2`}
-                                                rating={data?.vote_average.toFixed(
+                                                rating={data?.vote_average?.toFixed(
                                                     1
                                                 )}
                                             />
@@ -188,10 +186,10 @@ const DetailsBanner = ({ video, crew }) => {
                                                     Director:{" "}
                                                 </span>
                                                 <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
-                                                    {director.map((d, i) => (
+                                                    {director?.map((d, i) => (
                                                         <span key={i}>
                                                             {d?.name}
-                                                            {director.length -
+                                                            {director?.length -
                                                                 1 !==
                                                                 i && ", "}
                                                         </span>
@@ -205,10 +203,10 @@ const DetailsBanner = ({ video, crew }) => {
                                                     Writer:{" "}
                                                 </span>
                                                 <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
-                                                    {writer.map((d, i) => (
+                                                    {writer?.map((d, i) => (
                                                         <span key={i}>
                                                             {d?.name}
-                                                            {writer.length -
+                                                            {writer?.length -
                                                                 1 !==
                                                                 i && ", "}
                                                         </span>
@@ -253,15 +251,15 @@ const DetailsBanner = ({ video, crew }) => {
                 <div className="detailsBanner w-full bg-black1 pt-[70px] md:pt-[100px] mb-[50px] md:mb-0 md:min-h-[700px]">
                     <div className="detailsBannerSkeleton flex relative flex-col md:flex-row gap-[25px] md:gap-[50px]">
                         <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 flex items-center justify-between gap-6">
-                            <div className="left shrink-0 w-full block rounded-xl aspect-[1/1.5] md:max-w-[350px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                            <div className="left shrink-0 w-full block rounded-xl aspect-[1/1.5] md:max-w-[350px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
                             <div className="right w-full">
-                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                                <div className="row flex items-center gap-[25px] w-3/4 h-[25px] mb-12 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                                <div className="row flex items-center gap-[25px] w-2/4 h-[25px] mb-12 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
-                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                <div className="row flex items-center gap-[25px] w-3/4 h-[25px] mb-12 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                <div className="row flex items-center gap-[25px] w-2/4 h-[25px] mb-12 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
                             </div>
                         </div>
                     </div>

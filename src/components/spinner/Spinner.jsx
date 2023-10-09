@@ -1,12 +1,14 @@
 import React from "react";
 
-import "./style.scss";
-
 const Spinner = ({ initial }) => {
     return (
-        <div className={`loadingSpinner ${initial ? "initial" : ""}`}>
+        <div
+            className={`loadingSpinner w-full h-[150px] relative flex items-center justify-center ${
+                initial ? "initial h-[700px]" : ""
+            }`}
+        >
             <svg
-                className="spinner"
+                className="spinner z-[2] w-[50px] h-[50px]"
                 viewBox="0 0 50 50"
             >
                 <circle

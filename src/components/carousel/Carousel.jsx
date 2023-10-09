@@ -10,7 +10,6 @@ import dayjs from "dayjs";
 import Img from "../lazyLoadImage/Img";
 import PosterFallback from "../../assets/no-poster.png";
 
-import "./style.scss";
 import CircleRating from "../circleRating/CircleRating";
 import Genres from "../genres/Genres";
 
@@ -35,14 +34,14 @@ const Carousel = ({ data, loading, endpoint, title }) => {
     const skItem = () => {
         return (
             <div className="skeletonItem w-[125px] md:w-[calc(25%-15px)] lg:w-[calc(16.66%-16px)] shrink-0">
-                <div className="posterBlock skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] rounded-xl w-full aspect-[1/1.5] mb-3">
+                <div className="posterBlock skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer rounded-xl w-full aspect-[1/1.5] mb-3">
                     <div className="textBlock flex flex-col px-3">
-                        <div className="title skeleton relative rounded-lg overflow-hidden bg-black1 after:absolute after:inset-0 after:translate-x-[-100%] w-full h-5 my-3"></div>
-                        <div className="date skeleton relative rounded-lg overflow-hidden bg-black1 after:absolute after:inset-0 after:translate-x-[-100%] w-[75%] h-5"></div>
+                        <div className="title skeleton relative rounded-lg overflow-hidden bg-black1 after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer w-full h-5 my-3"></div>
+                        <div className="date skeleton relative rounded-lg overflow-hidden bg-black1 after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer w-[75%] h-5"></div>
                     </div>
                 </div>
-                <div className="skeleton relative rounded-lg overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] w-[75%] h-3"></div>
-                <div className="skeleton relative rounded-lg overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] w-[90%] mt-2 h-3"></div>
+                <div className="skeleton relative rounded-lg overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer w-[75%] h-3"></div>
+                <div className="skeleton relative rounded-lg overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer w-[90%] mt-2 h-3"></div>
             </div>
         );
     };
@@ -58,14 +57,18 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                         {title}
                                     </div>
                                 )}
-                                <BsFillArrowLeftCircleFill
-                                    className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
-                                    onClick={() => navigation("left")}
-                                />
-                                <BsFillArrowRightCircleFill
-                                    className="carouselRightNav arrow right-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
-                                    onClick={() => navigation("right")}
-                                />
+                                {data?.length >= 6 && (
+                                    <>
+                                        <BsFillArrowLeftCircleFill
+                                            className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
+                                            onClick={() => navigation("left")}
+                                        />
+                                        <BsFillArrowRightCircleFill
+                                            className="carouselRightNav arrow right-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
+                                            onClick={() => navigation("right")}
+                                        />
+                                    </>
+                                )}
                                 <div
                                     className="carouselItems scroll-pl-6 snap-x flex gap-2 md:gap-5 lg:gap-[19px] overflow-y-hidden md:overflow-hidden -mr-5 md:m-0 -ml-5 px-5 md:p-0"
                                     ref={carouselContainer}
@@ -82,7 +85,7 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                                         }/${item?.id}`
                                                     )
                                                 }
-                                                className="carouselItem snap-start w-[125px] md:w-[calc(25%-15px)] lg:w-[calc(16.66%-16px)] shrink-0 cursor-pointer"
+                                                className="carouselItem snap-start w-[125px] md:w-[calc(25%-15px)] lg:w-[calc(16.66%-16px)] shrink-0 cursor-pointer delay-75 duration-300 hover:scale-95"
                                             >
                                                 <div className="posterBlock relative w-full aspect-[1/1.5] bg-cover bg-center mb-7 flex items-end justify-between p-2">
                                                     <Img
@@ -116,7 +119,7 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                                         className="w-full h-full object-cover object-center"
                                                     />
                                                     <CircleRating
-                                                        className={`w-7 md:w-8 h-w-7 md:h-8 relative top-7 shrink-0 bg-black1 rounded-full p-[2px]`}
+                                                        className={`w-7 md:w-8 h-w-7 md:h-8 relative top-7 shrink-0 bg-black1 rounded-full p-[2px] text-3xl`}
                                                         rating={item?.vote_average.toFixed(
                                                             1
                                                         )}
@@ -126,12 +129,18 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                                             0,
                                                             2
                                                         )}
-                                                        classNameGenres={`genres flex gap-[5px] mb-[25px] flex-wrap flex-row`}
+                                                        classNameGenres={`genres hidden md:flex gap-[5px] mb-[25px] flex-wrap flex-row`}
                                                         classNameGenre={`genre bg-black3 border border-gray py-[1px] px-[5px] text-[10px] rounded-[4px] text-white whitespace-nowrap`}
                                                     />
                                                 </div>
                                                 <div className="textBlock text-white flex flex-col">
-                                                    <span className="title text-sm md:text-base mb-1 leading-6 line-clamp-1">
+                                                    <span
+                                                        title={`${
+                                                            item?.title ||
+                                                            item?.name
+                                                        }`}
+                                                        className="title text-sm md:text-base mb-1 leading-6 line-clamp-1"
+                                                    >
                                                         {item?.title ||
                                                             item?.name}
                                                     </span>
@@ -152,7 +161,7 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                     </>
                 ) : (
                     <>
-                        <div className="sectionHeading w-28 text-sm md:text-lg lg:text-2xl text-white font-bold mb-4 h-6 rounded-[10px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%]"></div>
+                        <div className="sectionHeading w-28 text-sm md:text-lg lg:text-2xl text-white font-bold mb-4 h-6 rounded-[10px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
                         <div className="loadingSkeleton scroll-pl-6 snap-x flex gap-2 md:gap-5 lg:gap-[19px] overflow-y-hidden md:overflow-hidden -mr-5 md:m-0 -ml-5 px-5 md:p-0">
                             {skItem()}
                             {skItem()}

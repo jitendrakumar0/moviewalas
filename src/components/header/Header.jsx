@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import { SlMenu } from "react-icons/sl";
 import { VscChromeClose } from "react-icons/vsc";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-
-import "./style.scss";
 
 import logo from "../../assets/movix-logo.svg";
 
@@ -17,10 +15,17 @@ const Header = () => {
     const [showSearch, setShowSearch] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
+    const searchInputFocus = useRef(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location]);
+
+    useEffect(() => {
+        if (searchInputFocus?.current) {
+            searchInputFocus?.current.focus();
+        }
+    }, [showSearch]);
 
     const controlNavbar = () => {
         // console.log(window.scrollY);
@@ -75,7 +80,7 @@ const Header = () => {
     return (
         <header
             className={`header fixed w-full z-10 flex items-center transition-all ${
-                mobileMenu ? "mobileView bg-black3" : ""
+                mobileMenu ? "mobileView group bg-black3" : ""
             } ${
                 show ? "backdrop-blur-lg bg-black1/[0.25] h-14" : "h-16 md:h-24"
             } ${beforeScroll ? "translate-y-0" : "-translate-y-16"}`}
@@ -92,14 +97,14 @@ const Header = () => {
                     />
                 </Link>
                 <ul
-                    className={`menuItems list-none md:flex items-center ${
+                    className={`menuItems group-[]:animate-topToBottom list-none md:flex items-center ${
                         mobileMenu
                             ? "flex absolute top-14 left-0 bg-black3 flex-col w-full py-5 px-0 border-t border-solid border-[rgba(255,255,255)]/[0.1]"
                             : "hidden"
                     }`}
                 >
                     <li
-                        className={`menuItem h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
+                        className={`menuItem last:hidden h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
                             mobileMenu
                                 ? "text-xl w-full h-auto py-4 px-5 m-0 flex-col items-start"
                                 : ""
@@ -109,7 +114,7 @@ const Header = () => {
                         Movies
                     </li>
                     <li
-                        className={`menuItem h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
+                        className={`menuItem last:hidden h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
                             mobileMenu
                                 ? "text-xl w-full h-auto py-4 px-5 m-0 flex-col items-start"
                                 : ""
@@ -119,7 +124,7 @@ const Header = () => {
                         TV Shows
                     </li>
                     <li
-                        className={`menuItem h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
+                        className={`menuItem last:hidden h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
                             mobileMenu
                                 ? "text-xl w-full h-auto py-4 px-5 m-0 flex-col items-start"
                                 : ""
@@ -131,7 +136,7 @@ const Header = () => {
                         />
                     </li>
                 </ul>
-                <div className="mobileMenuItems flex md:hidden items-center gap-5">
+                <div className="mobileMenuItem last:hiddens flex md:hidden items-center gap-5">
                     <HiOutlineSearch
                         className="text-lg text-white cursor-pointer"
                         onClick={openSearch}
@@ -151,7 +156,7 @@ const Header = () => {
             </div>
             {showSearch && (
                 <div
-                    className={`searchBar w-full bg-white absolute ${
+                    className={`searchBar animate-topToBottom w-full bg-white absolute ${
                         beforeScroll ? "top-0" : "-top-28"
                     }`}
                 >
@@ -159,9 +164,11 @@ const Header = () => {
                         <div className="searchInput flex items-center w-full rounded-full bg-white p-[3px] md:p-[5px]">
                             <input
                                 type="text"
+                                autoFocus
                                 placeholder="Search for a movie or tv show...."
                                 onChange={(e) => setQuery(e.target.value)}
                                 onKeyUp={searchQueryHandler}
+                                ref={searchInputFocus}
                                 className="w-[calc(100%-40px)] bg-gray-light md:w-[calc(100%-56px)] lg:w-[calc(100%-64px)] h-14 md:h-14 lg:h-16 text-black1 outline-none border-none rounded-l-4xl py-0 px-3 md:px-8 text-sm md:text-lg lg:text-xl"
                             />
                             <div

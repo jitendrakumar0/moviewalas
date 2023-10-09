@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.scss";
+
 import { useSelector } from "react-redux";
 
 const Genres = ({ data, classNameGenres, classNameGenre }) => {

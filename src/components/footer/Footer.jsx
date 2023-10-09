@@ -6,8 +6,6 @@ import {
     FaLinkedin,
 } from "react-icons/fa";
 
-import "./style.scss";
-
 const Footer = () => {
     return (
         <footer className="footer bg-black3 py-12 text-white relative">

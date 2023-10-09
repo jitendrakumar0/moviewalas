@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import "./style.scss";
 
 import useFetch from "../../../hooks/useFetch";
 
@@ -19,9 +18,6 @@ const HeroBanner = () => {
     useEffect(() => {
         const BannerData = data?.results?.[Math.floor(Math.random() * 20)];
         setBannerInfo(BannerData);
-        if (BannerData) {
-            console.log(BannerData);
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
@@ -63,7 +59,7 @@ const HeroBanner = () => {
 
             <div className="w-full max-w-[1200px] my-0 mx-auto py-0 px-5">
                 <div className="heroBannerContent flex flex-col items-center text-white relative max-w-[800px] my-0 mx-auto text-center md:-mt-40">
-                    <span className="title text-4xl md:text-7xl font-bold mb-1 md:mb-5 box-shadow-custom1">
+                    <span className="title text-4xl md:text-7xl font-bold mb-1 md:mb-5 drop-shadow-custom1">
                         Welcome.
                     </span>
                     <span className="subTitle text-sm md:text-2xl mb-10">

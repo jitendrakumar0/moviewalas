@@ -7,6 +7,7 @@ const Genres = ({ data, classNameGenres, classNameGenre }) => {
     return (
         <div className={classNameGenres}>
             {data?.map((g) => {
+                // eslint-disable-next-line array-callback-return
                 if (!genres[g]?.name) return;
                 return (
                     <div

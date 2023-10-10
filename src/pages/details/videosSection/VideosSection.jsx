@@ -34,7 +34,7 @@ const VideosSection = ({ datas, loadings }) => {
     useEffect(() => {
         const bannerData = data?.results?.[Math.floor(Math.random() * 20)];
         setBannerInfo(bannerData);
-    }, [datas]);
+    }, [data]);
 
     const loadingSkeleton = () => {
         return (
@@ -52,8 +52,8 @@ const VideosSection = ({ datas, loadings }) => {
                 <>
                     {datas?.results?.length > 0 && (
                         <>
-                            <div className="videosSection relative py-[40px] my-[30px]">
-                                {!loadings && (
+                            <div className="videosSection relative py-5 md:py-10 my-5 md:my-7">
+                                {!loading && (
                                     <div className="opacity-20">
                                         <Img
                                             className={`w-full h-full object-cover object-center`}
@@ -96,13 +96,13 @@ const VideosSection = ({ datas, loadings }) => {
                                         </>
                                     )}
                                     <div
-                                        className="videos scroll-pl-6 snap-x flex gap-[10px] md:gap-[20px] overflow-y-hidden md:overflow-hidden -mx-5 md:m-0 py-0 md:py-2 px-5 md:px-2"
+                                        className="videos max-md:scroll-pl-3 snap-x flex flex-row flex-nowrap overflow-y-hidden md:overflow-hidden -mx-5 md:-mx-2 px-5 py-0 md:p-0"
                                         ref={carouselContainer}
                                     >
                                         {datas?.results?.map((video) => (
                                             <div
                                                 key={video?.id}
-                                                className="videoItem snap-start w-[180px] sm:w-[200px] md:w-1/4 shrink-0 cursor-pointer delay-75 duration-300 hover:scale-95"
+                                                className="videoItem snap-start w-[180px] sm:w-[200px] md:w-1/4 px-2 shrink-0 cursor-pointer delay-75 duration-300 hover:scale-95"
                                                 onClick={() => {
                                                     setVideoId(video?.key);
                                                     setShow(true);

@@ -104,7 +104,7 @@ const Header = () => {
                     }`}
                 >
                     <li
-                        className={`menuItem last:hidden h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
+                        className={`menuItem max-md:last:hidden h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
                             mobileMenu
                                 ? "text-xl w-full h-auto py-4 px-5 m-0 flex-col items-start"
                                 : ""
@@ -114,7 +114,7 @@ const Header = () => {
                         Movies
                     </li>
                     <li
-                        className={`menuItem last:hidden h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
+                        className={`menuItem max-md:last:hidden h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
                             mobileMenu
                                 ? "text-xl w-full h-auto py-4 px-5 m-0 flex-col items-start"
                                 : ""
@@ -124,7 +124,7 @@ const Header = () => {
                         TV Shows
                     </li>
                     <li
-                        className={`menuItem last:hidden h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
+                        className={`menuItem max-md:last:hidden h-14 flex items-center my-0 mx-4 text-white md:hover:text-white/[0.80] font-medium relative cursor-pointer ${
                             mobileMenu
                                 ? "text-xl w-full h-auto py-4 px-5 m-0 flex-col items-start"
                                 : ""

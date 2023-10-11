@@ -6,6 +6,7 @@ import { fetchDataFromApi } from "../../utils/api";
 import Spinner from "../../components/spinner/Spinner";
 
 import MovieCard from "../../components/movieCard/MovieCard";
+import PersonCard from "../../components/personCard/PersonCard";
 const SearchResult = ({ websiteName }) => {
     const [data, setData] = useState(null);
     const [pageNum, setPageNum] = useState(1);
@@ -67,7 +68,16 @@ const SearchResult = ({ websiteName }) => {
                                     loader={<Spinner />}
                                 >
                                     {data?.results?.map((item, index) => {
-                                        // if(item.media_type === "person") return;
+                                        if(item.media_type === "person") {
+                                            return (
+                                                <PersonCard
+                                                    className={`w-full shrink-0`}
+                                                    key={index}
+                                                    data={item}
+                                                    fromSearch={true}
+                                                />
+                                            )
+                                        };
                                         return (
                                             <MovieCard
                                                 className={`w-full shrink-0`}

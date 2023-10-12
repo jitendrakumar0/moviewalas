@@ -22,10 +22,9 @@
     background-color: white;
 
     .CircularProgressbar-text {
-        fill: white;
-        font-size: 34px;
+        font-size: 34px !important;
         font-weight: 700;
-        fill: black;
+        fill: black !important;
     }
 
     .CircularProgressbar-trail {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
@@ -16,6 +16,7 @@ const DetailsBanner = ({ video, crew }) => {
     const [videoId, setVideoId] = useState(null);
     const { mediaType, id } = useParams();
     const { data, loading } = useFetch(`/${mediaType}/${id}`);
+    const BackdropFallback = "TFTfzrkX8L7bAKUcch6qLmjpLu.jpg";
 
     const { url } = useSelector((state) => state.home);
 
@@ -49,29 +50,46 @@ const DetailsBanner = ({ video, crew }) => {
                                         data?.backdrop_path
                                             ? url.backdrop_sizes_w300 +
                                               data?.backdrop_path
-                                            : PosterFallback
+                                            : url.backdrop_sizes_w300 +
+                                              "/" +
+                                              BackdropFallback
                                     }
                                     srcSet={`${
-                                        url?.backdrop_sizes_w300 +
                                         data?.backdrop_path
+                                            ? url.backdrop_sizes_w300 +
+                                              data?.backdrop_path
+                                            : url.backdrop_sizes_w300 +
+                                              "/" +
+                                              BackdropFallback
                                     } 250w, ${
-                                        url?.backdrop_sizes_w780 +
                                         data?.backdrop_path
+                                            ? url.backdrop_sizes_w780 +
+                                              data?.backdrop_path
+                                            : url.backdrop_sizes_w780 +
+                                              "/" +
+                                              BackdropFallback
                                     } 400w, ${
-                                        url?.backdrop_sizes_w1280 +
                                         data?.backdrop_path
+                                            ? url.backdrop_sizes_w1280 +
+                                              data?.backdrop_path
+                                            : url.backdrop_sizes_w1280 +
+                                              "/" +
+                                              BackdropFallback
                                     } 600w`}
                                 />
                             </div>
                             <div className="opacity-layer w-full h-[250px] bg-gradient3 absolute bottom-0 left-0 z-[1]"></div>
                             <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 flex items-center justify-between relative z-[1]">
-                                <div className="content flex relative flex-col md:flex-row gap-[10px] md:gap-[50px]">
-                                    <div className="left shrink-0 w-full md:max-w-[350px]">
+                                <div className="content flex relative flex-col md:flex-row gap-[10px] md:gap-[50px] w-full">
+                                    <div className="left shrink-0 w-full md:max-w-[350px] relative">
                                         <Img
                                             className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
                                             width={`400`}
                                             height={`600`}
-                                            alt={data?.name || data?.title}
+                                            alt={
+                                                (data?.name || data?.title) &&
+                                                (data?.name || data?.title)
+                                            }
                                             src={
                                                 data?.poster_path
                                                     ? url.poster_sizes_w92 +
@@ -79,102 +97,214 @@ const DetailsBanner = ({ video, crew }) => {
                                                     : PosterFallback
                                             }
                                             srcSet={`${
-                                                url?.poster_sizes_w185 +
                                                 data?.poster_path
+                                                    ? url.poster_sizes_w92 +
+                                                      data?.poster_path
+                                                    : PosterFallback
                                             } 250w, ${
-                                                url?.poster_sizes_w342 +
                                                 data?.poster_path
+                                                    ? url.poster_sizes_w185 +
+                                                      data?.poster_path
+                                                    : PosterFallback
+                                            } 250w, ${
+                                                data?.poster_path
+                                                    ? url.poster_sizes_w342 +
+                                                      data?.poster_path
+                                                    : PosterFallback
                                             } 400w, ${
-                                                url?.poster_sizes_w500 +
                                                 data?.poster_path
+                                                    ? url.poster_sizes_w500 +
+                                                      data?.poster_path
+                                                    : PosterFallback
                                             } 600w`}
                                         />
                                     </div>
                                     <div className="right text-white shrink-1">
-                                        <div className="title font-bold text-[20px] md:text-[34px] leading-[40px] md:leading-[44px]">
-                                            {`${
-                                                data?.name || data?.title
-                                            } (${dayjs(
-                                                data?.release_date
-                                            ).format("YYYY")})`}
-                                        </div>
-                                        <div className="subtitle text-sm md:text-xl leading-6 md:leading-7 mb-[15px] italic text-white/[0.6]">
-                                            {data?.tagline}
-                                        </div>
-                                        <Genres
-                                            data={_genres}
-                                            classNameGenres={`genres hidden md:flex gap-[5px] mb-4 md:mb-[25px] flex-wrap flex-row`}
-                                            classNameGenre={`genre backdrop-blur-xl border border-gray py-[1px] px-[5px] text-xs md:text-sm rounded-[4px] text-white whitespace-nowrap`}
-                                        />
+                                        {(data?.name || data?.title) && (
+                                            <>
+                                                <div className="title font-bold text-[20px] md:text-[34px] leading-[40px] md:leading-[44px]">
+                                                    {`${
+                                                        data?.name ||
+                                                        data?.title
+                                                    }`}
 
-                                        <div className="row flex items-center gap-3 md:gap-[25px] mb-[25px]">
-                                            <CircleRating
-                                                className={`w-7 md:w-12 h-7 md:h-12 shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px] bg-black2`}
-                                                rating={data?.vote_average?.toFixed(
-                                                    1
-                                                )}
-                                            />
-                                            <div
-                                                className="playbtn flex items-center gap-2 md:gap-5 cursor-pointer md:hover:text-blue"
-                                                onClick={() => {
-                                                    setShow(true);
-                                                    setVideoId(video?.key);
-                                                }}
-                                            >
-                                                <PlayIcon className="w-6 md:w-11 h-6 md:h-11" />{" "}
-                                                <span className="text text-sm md:text-base font-semibold transition-[all] duration-[0.7s]">
-                                                    Watch Trailer
-                                                </span>
+                                                    {data?.release_date && (
+                                                        <>
+                                                            {" "}
+                                                            (
+                                                            {dayjs(
+                                                                data?.release_date
+                                                            ).format("YYYY")}
+                                                            )
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </>
+                                        )}
+                                        {data?.tagline ||
+                                        data?.known_for_department ? (
+                                            <div className="subtitle text-sm md:text-xl leading-6 md:leading-7 mb-[15px] italic text-white/[0.6]">
+                                                {data?.tagline ||
+                                                    data?.known_for_department}
                                             </div>
-                                        </div>
-                                        <div className="overview mb-[25px]">
-                                            <div className="heading text-base md:text-lg mb-[10px] font-bold">
-                                                Overview
+                                        ) : (
+                                            <div className="pb-4"></div>
+                                        )}
+                                        {_genres && (
+                                            <>
+                                                <Genres
+                                                    data={_genres}
+                                                    classNameGenres={`genres hidden md:flex gap-[5px] mb-4 md:mb-[25px] flex-wrap flex-row`}
+                                                    classNameGenre={`genre backdrop-blur-xl border border-gray py-[1px] px-[5px] text-xs md:text-sm rounded-[4px] text-white whitespace-nowrap`}
+                                                />
+                                            </>
+                                        )}
+                                        {(data?.vote_average || video?.key) && (
+                                            <>
+                                                <div className="row flex items-center gap-3 md:gap-[25px] mb-[25px]">
+                                                    {data?.vote_average && (
+                                                        <>
+                                                            <CircleRating
+                                                                className={`w-7 md:w-12 h-7 md:h-12 shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px] bg-black2`}
+                                                                rating={data?.vote_average?.toFixed(
+                                                                    1
+                                                                )}
+                                                            />
+                                                        </>
+                                                    )}
+                                                    {video?.key && (
+                                                        <>
+                                                            <div
+                                                                className="playbtn flex items-center gap-2 md:gap-5 cursor-pointer md:hover:text-blue"
+                                                                onClick={() => {
+                                                                    setShow(
+                                                                        true
+                                                                    );
+                                                                    setVideoId(
+                                                                        video?.key
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <PlayIcon className="w-6 md:w-11 h-6 md:h-11" />{" "}
+                                                                <span className="text text-sm md:text-base font-semibold transition-[all] duration-[0.7s]">
+                                                                    Watch
+                                                                    Trailer
+                                                                </span>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </>
+                                        )}
+                                        {(data?.overview ||
+                                            data?.biography) && (
+                                            <div className="overview mb-[25px]">
+                                                <div className="heading text-base md:text-lg mb-[10px] font-bold">
+                                                    {data?.overview
+                                                        ? "Overview"
+                                                        : "Biography"}
+                                                </div>
+                                                <div className="description text-xs md:text-sm leading-6 md:pr-[100px]">
+                                                    {data?.overview ||
+                                                        data?.biography}
+                                                </div>
                                             </div>
-                                            <div className="description text-xs md:text-sm leading-6 md:pr-[100px]">
-                                                {data?.overview}
-                                            </div>
-                                        </div>
+                                        )}
                                         <div className="info py-[15px] px-0 flex border-b border-solid gap-3 border-b-[rgba(255,_255,_255,_0.1)]">
-                                            {data?.status && (
+                                            {(data?.status || data?.gender) && (
                                                 <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
                                                     <span className="text xl:mb-[10px] max-lg:flex text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
-                                                        Status{" "}
+                                                        {data?.status
+                                                            ? "Status"
+                                                            : "Gender"}{" "}
                                                         <span className="hidden md:inline-block">
                                                             :
                                                         </span>{" "}
                                                     </span>
                                                     <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
-                                                        {data?.status}
+                                                        {data?.status && (
+                                                            <>{data?.status}</>
+                                                        )}
+                                                        {data?.gender && (
+                                                            <>
+                                                                {data?.gender ===
+                                                                1
+                                                                    ? "Female"
+                                                                    : "Male"}
+                                                            </>
+                                                        )}
                                                     </span>
                                                 </div>
                                             )}
-                                            {data?.release_date && (
+                                            {(data?.release_date ||
+                                                data?.birthday) && (
                                                 <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
                                                     <span className="text lg:mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
-                                                        Release Date{" "}
+                                                        {data?.release_date
+                                                            ? "Release Date"
+                                                            : "Birthday"}{" "}
+                                                        <span className="hidden md:inline-block">
+                                                            :
+                                                        </span>{" "}
+                                                    </span>
+                                                    <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
+                                                        {data?.release_date ? (
+                                                            <>
+                                                                {dayjs(
+                                                                    data?.release_date
+                                                                ).format(
+                                                                    "MMM D, YYYY"
+                                                                )}
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                {dayjs(
+                                                                    data?.birthday
+                                                                ).format(
+                                                                    "MMM D, YYYY"
+                                                                )}
+                                                            </>
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {data?.deathday && (
+                                                <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
+                                                    <span className="text lg:mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
+                                                        Deathday{" "}
                                                         <span className="hidden md:inline-block">
                                                             :
                                                         </span>{" "}
                                                     </span>
                                                     <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
                                                         {dayjs(
-                                                            data?.release_date
+                                                            data?.deathday
                                                         ).format("MMM D, YYYY")}
                                                     </span>
                                                 </div>
                                             )}
-                                            {data?.runtime && (
+                                            {(data?.runtime ||
+                                                data?.place_of_birth) && (
                                                 <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
                                                     <span className="text lg:mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
-                                                        Runtime{" "}
+                                                        {data?.runtime
+                                                            ? "Runtime"
+                                                            : "Birth Place"}{" "}
                                                         <span className="hidden md:inline-block">
                                                             :
                                                         </span>{" "}
                                                     </span>
                                                     <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
-                                                        {toHoursAndMinutes(
-                                                            data.runtime
+                                                        {data?.runtime ? (
+                                                            toHoursAndMinutes(
+                                                                data.runtime
+                                                            )
+                                                        ) : (
+                                                            <>
+                                                                {
+                                                                    data?.place_of_birth
+                                                                }
+                                                            </>
                                                         )}
                                                     </span>
                                                 </div>

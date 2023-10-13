@@ -10,12 +10,13 @@ import {
 import { useSelector } from "react-redux";
 import useFetch from "../../../hooks/useFetch";
 
-const VideosSection = ({ datas, loadings }) => {
+const VideosSection = ({ mediaType, id }) => {
     const [bannerInfo, setBannerInfo] = useState("");
     const [show, setShow] = useState(false);
     const [videoId, setVideoId] = useState(null);
     const { url } = useSelector((state) => state.home);
 
+    const { data:datas, loading:loadings } = useFetch(`/${mediaType}/${id}/videos`);
     const { data, loading } = useFetch("/movie/upcoming");
 
     const carouselContainer = useRef();

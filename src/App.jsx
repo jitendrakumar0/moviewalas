@@ -13,6 +13,7 @@ import Details from "./pages/details/Details";
 import SearchResult from "./pages/searchResult/SearchResult";
 import Explore from "./pages/explore/Explore";
 import PageNotFound from "./pages/404/PageNotFound";
+import Collection from "./pages/collection/Collection";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -78,6 +79,10 @@ const App = () => {
                 <Route
                     path="/explore/:mediaType"
                     element={<Explore />}
+                />
+                <Route
+                    path="/collection/:id"
+                    element={<Collection />}
                 />
                 <Route
                     path="*"

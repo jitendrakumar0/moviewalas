@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 
@@ -10,20 +9,38 @@ import Img from "../../../components/lazyLoadImage/Img.jsx";
 import PosterFallback from "../../../assets/no-poster.png";
 import { PlayIcon } from "../PlayBtn";
 import VideoPopup from "../../../components/videoPopup/VideoPopup";
+import { fetchDataFromApi } from "../../../utils/api";
 
-const DetailsBanner = ({ video, crew }) => {
+const DetailsBanner = ({ mediaType, id }) => {
+    const [videoData,  setVideoData] = useState('')
+    const { data: credits } = useFetch(`/${mediaType}/${id}/credits`);
+
     const [show, setShow] = useState(false);
     const [videoId, setVideoId] = useState(null);
-    const { mediaType, id } = useParams();
     const { data, loading } = useFetch(`/${mediaType}/${id}`);
     const BackdropFallback = "TFTfzrkX8L7bAKUcch6qLmjpLu.jpg";
+
+    
+    const videoApi = () => {
+        fetchDataFromApi(`/${mediaType}/${id}/videos`).then((res)=> {
+            setVideoData(res)
+        })
+    }
+    useEffect(()=>{
+        if(mediaType !== "person") {
+            videoApi()
+        }
+    },[mediaType])
+
+    const relativeTime = require("dayjs/plugin/relativeTime");
+    dayjs.extend(relativeTime);
 
     const { url } = useSelector((state) => state.home);
 
     const _genres = data?.genres?.map((g) => g?.id);
 
-    const director = crew?.filter((f) => f?.job === "Director");
-    const writer = crew?.filter(
+    const director = credits?.crew?.filter((f) => f?.job === "Director");
+    const writer = credits?.crew?.filter(
         (f) =>
             f?.job === "Screenplay" || f?.job === "Story" || f?.job === "Writer"
     );
@@ -82,42 +99,78 @@ const DetailsBanner = ({ video, crew }) => {
                             <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 flex items-center justify-between relative z-[1]">
                                 <div className="content flex relative flex-col md:flex-row gap-[10px] md:gap-[50px] w-full">
                                     <div className="left shrink-0 w-full md:max-w-[350px] relative">
-                                        <Img
-                                            className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
-                                            width={`400`}
-                                            height={`600`}
-                                            alt={
-                                                (data?.name || data?.title) &&
-                                                (data?.name || data?.title)
-                                            }
-                                            src={
-                                                data?.poster_path
-                                                    ? url.poster_sizes_w92 +
-                                                      data?.poster_path
-                                                    : PosterFallback
-                                            }
-                                            srcSet={`${
-                                                data?.poster_path
-                                                    ? url.poster_sizes_w92 +
-                                                      data?.poster_path
-                                                    : PosterFallback
-                                            } 250w, ${
-                                                data?.poster_path
-                                                    ? url.poster_sizes_w185 +
-                                                      data?.poster_path
-                                                    : PosterFallback
-                                            } 250w, ${
-                                                data?.poster_path
-                                                    ? url.poster_sizes_w342 +
-                                                      data?.poster_path
-                                                    : PosterFallback
-                                            } 400w, ${
-                                                data?.poster_path
-                                                    ? url.poster_sizes_w500 +
-                                                      data?.poster_path
-                                                    : PosterFallback
-                                            } 600w`}
-                                        />
+                                        {mediaType === "person" ? (
+                                            <Img
+                                                className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
+                                                width={`400`}
+                                                height={`600`}
+                                                alt={
+                                                    (data?.name ||
+                                                        data?.title) &&
+                                                    (data?.name || data?.title)
+                                                }
+                                                src={
+                                                    data?.profile_path
+                                                        ? url.profile_sizes_w45 +
+                                                          data?.profile_path
+                                                        : PosterFallback
+                                                }
+                                                srcSet={`${
+                                                    data?.profile_path
+                                                        ? url.profile_sizes_w45 +
+                                                          data?.profile_path
+                                                        : PosterFallback
+                                                } 250w, ${
+                                                    data?.profile_path
+                                                        ? url.profile_sizes_w185 +
+                                                          data?.profile_path
+                                                        : PosterFallback
+                                                } 250w, ${
+                                                    data?.profile_path
+                                                        ? url.profile_sizes_h632 +
+                                                          data?.profile_path
+                                                        : PosterFallback
+                                                } 400w`}
+                                            />
+                                        ) : (
+                                            <Img
+                                                className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
+                                                width={`400`}
+                                                height={`600`}
+                                                alt={
+                                                    (data?.name ||
+                                                        data?.title) &&
+                                                    (data?.name || data?.title)
+                                                }
+                                                src={
+                                                    data?.poster_path
+                                                        ? url.poster_sizes_w92 +
+                                                          data?.poster_path
+                                                        : PosterFallback
+                                                }
+                                                srcSet={`${
+                                                    data?.poster_path
+                                                        ? url.poster_sizes_w92 +
+                                                          data?.poster_path
+                                                        : PosterFallback
+                                                } 250w, ${
+                                                    data?.poster_path
+                                                        ? url.poster_sizes_w185 +
+                                                          data?.poster_path
+                                                        : PosterFallback
+                                                } 250w, ${
+                                                    data?.poster_path
+                                                        ? url.poster_sizes_w342 +
+                                                          data?.poster_path
+                                                        : PosterFallback
+                                                } 400w, ${
+                                                    data?.poster_path
+                                                        ? url.poster_sizes_w500 +
+                                                          data?.poster_path
+                                                        : PosterFallback
+                                                } 600w`}
+                                            />
+                                        )}
                                     </div>
                                     <div className="right text-white shrink-1">
                                         {(data?.name || data?.title) && (
@@ -144,6 +197,9 @@ const DetailsBanner = ({ video, crew }) => {
                                         {data?.tagline ||
                                         data?.known_for_department ? (
                                             <div className="subtitle text-sm md:text-xl leading-6 md:leading-7 mb-[15px] italic text-white/[0.6]">
+                                                {data?.known_for_department && (
+                                                    <>Known For </>
+                                                )}
                                                 {data?.tagline ||
                                                     data?.known_for_department}
                                             </div>
@@ -159,7 +215,8 @@ const DetailsBanner = ({ video, crew }) => {
                                                 />
                                             </>
                                         )}
-                                        {(data?.vote_average || video?.key) && (
+                                        {(data?.vote_average ||
+                                            videoData?.results?.[0]?.key) && (
                                             <>
                                                 <div className="row flex items-center gap-3 md:gap-[25px] mb-[25px]">
                                                     {data?.vote_average && (
@@ -172,7 +229,8 @@ const DetailsBanner = ({ video, crew }) => {
                                                             />
                                                         </>
                                                     )}
-                                                    {video?.key && (
+                                                    {videoData?.results?.[0]
+                                                        ?.key && (
                                                         <>
                                                             <div
                                                                 className="playbtn flex items-center gap-2 md:gap-5 cursor-pointer md:hover:text-blue"
@@ -181,7 +239,9 @@ const DetailsBanner = ({ video, crew }) => {
                                                                         true
                                                                     );
                                                                     setVideoId(
-                                                                        video?.key
+                                                                        videoData
+                                                                            ?.results?.[0]
+                                                                            ?.key
                                                                     );
                                                                 }}
                                                             >
@@ -212,16 +272,13 @@ const DetailsBanner = ({ video, crew }) => {
                                         )}
                                         <div className="info py-[15px] px-0 flex border-b border-solid gap-3 border-b-[rgba(255,_255,_255,_0.1)]">
                                             {(data?.status || data?.gender) && (
-                                                <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
-                                                    <span className="text xl:mb-[10px] max-lg:flex text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
+                                                <div className="infoItem flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
+                                                    <span className="text lg:mb-[5px] max-xl:flex text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         {data?.status
                                                             ? "Status"
                                                             : "Gender"}{" "}
-                                                        <span className="hidden md:inline-block">
-                                                            :
-                                                        </span>{" "}
                                                     </span>
-                                                    <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
+                                                    <span className="text lg:mb-[5px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2">
                                                         {data?.status && (
                                                             <>{data?.status}</>
                                                         )}
@@ -238,16 +295,13 @@ const DetailsBanner = ({ video, crew }) => {
                                             )}
                                             {(data?.release_date ||
                                                 data?.birthday) && (
-                                                <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
-                                                    <span className="text lg:mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
+                                                <div className="infoItem flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
+                                                    <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         {data?.release_date
                                                             ? "Release Date"
                                                             : "Birthday"}{" "}
-                                                        <span className="hidden md:inline-block">
-                                                            :
-                                                        </span>{" "}
                                                     </span>
-                                                    <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
+                                                    <span className="text lg:mb-[5px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2">
                                                         {data?.release_date ? (
                                                             <>
                                                                 {dayjs(
@@ -263,20 +317,32 @@ const DetailsBanner = ({ video, crew }) => {
                                                                 ).format(
                                                                     "MMM D, YYYY"
                                                                 )}
+                                                                &nbsp;&nbsp; (
+                                                                {dayjs(
+                                                                    data?.birthday
+                                                                ).diff(
+                                                                    dayjs(),
+                                                                    "years"
+                                                                ) -
+                                                                    dayjs(
+                                                                        data?.birthday
+                                                                    ).diff(
+                                                                        dayjs(),
+                                                                        "years"
+                                                                    ) *
+                                                                        2}{" "}
+                                                                old)
                                                             </>
                                                         )}
                                                     </span>
                                                 </div>
                                             )}
                                             {data?.deathday && (
-                                                <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
-                                                    <span className="text lg:mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
+                                                <div className="infoItem flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
+                                                    <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         Deathday{" "}
-                                                        <span className="hidden md:inline-block">
-                                                            :
-                                                        </span>{" "}
                                                     </span>
-                                                    <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
+                                                    <span className="text lg:mb-[5px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2">
                                                         {dayjs(
                                                             data?.deathday
                                                         ).format("MMM D, YYYY")}
@@ -285,16 +351,13 @@ const DetailsBanner = ({ video, crew }) => {
                                             )}
                                             {(data?.runtime ||
                                                 data?.place_of_birth) && (
-                                                <div className="infoItem max-lg:flex max-lg:w-full flex-col lg:flex-row flex-wrap overflow-hidden border border-solid border-gray rounded-lg">
-                                                    <span className="text lg:mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray px-2 py-1">
+                                                <div className="infoItem flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
+                                                    <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         {data?.runtime
                                                             ? "Runtime"
                                                             : "Birth Place"}{" "}
-                                                        <span className="hidden md:inline-block">
-                                                            :
-                                                        </span>{" "}
                                                     </span>
-                                                    <span className="text lg:mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2 py-1">
+                                                    <span className="text lg:mb-[5px] text-xs md:text-sm opacity-50 leading-6 font-semibold px-2">
                                                         {data?.runtime ? (
                                                             toHoursAndMinutes(
                                                                 data.runtime
@@ -309,61 +372,131 @@ const DetailsBanner = ({ video, crew }) => {
                                                     </span>
                                                 </div>
                                             )}
+                                            <div className="infoItem flex flex-col flex-wrap overflow-hidden border-2 border-solid border-gray/[0.5] bg-gray/[0.3] rounded-lg duration-300 hover:bg-gray-dark cursor-pointer">
+                                                <span className="text lg:mt-[5px] text-xs md:text-sm leading-6 bold font-semibold px-2 pt-1">
+                                                    View
+                                                </span>
+                                                <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 font-semibold px-2 pb-1">
+                                                    More
+                                                </span>
+                                            </div>
                                         </div>
-                                        {director?.length > 0 && (
-                                            <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
-                                                <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
-                                                    Director:{" "}
-                                                </span>
-                                                <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
-                                                    {director?.map((d, i) => (
-                                                        <span key={i}>
-                                                            {d?.name}
-                                                            {director?.length -
-                                                                1 !==
-                                                                i && ", "}
+                                        {mediaType === "person" ? (
+                                            <>
+                                                {data?.also_known_as?.length >
+                                                    0 && (
+                                                    <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
+                                                        <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
+                                                            Also Known as:{" "}
                                                         </span>
-                                                    ))}
-                                                </span>
-                                            </div>
-                                        )}
-                                        {writer?.length > 0 && (
-                                            <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
-                                                <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
-                                                    Writer:{" "}
-                                                </span>
-                                                <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
-                                                    {writer?.map((d, i) => (
-                                                        <span key={i}>
-                                                            {d?.name}
-                                                            {writer?.length -
-                                                                1 !==
-                                                                i && ", "}
+                                                        <span className="text mb-[10px] text-xs md:text-sm text-white/60 leading-6 font-semibold">
+                                                            {data?.also_known_as?.map(
+                                                                (d, i) => {
+                                                                    return (
+                                                                        <span
+                                                                            key={
+                                                                                i
+                                                                            }
+                                                                        >
+                                                                            {d}{" "}
+                                                                            <span className="text-white font-bold">
+                                                                                {" "}
+                                                                                {data
+                                                                                    ?.also_known_as
+                                                                                    ?.length -
+                                                                                    1 !==
+                                                                                    i &&
+                                                                                    " • "}{" "}
+                                                                            </span>
+                                                                        </span>
+                                                                    );
+                                                                }
+                                                            )}
                                                         </span>
-                                                    ))}
-                                                </span>
-                                            </div>
-                                        )}
-                                        {data?.created_by?.length > 0 && (
-                                            <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
-                                                <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
-                                                    Creator:{" "}
-                                                </span>
-                                                <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
-                                                    {data?.created_by.map(
-                                                        (d, i) => (
-                                                            <span key={i}>
-                                                                {d?.name}
-                                                                {data
-                                                                    ?.created_by
-                                                                    .length -
-                                                                    1 !==
-                                                                    i && ", "}
-                                                            </span>
-                                                        )
-                                                    )}
-                                                </span>
-                                            </div>
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <>
+                                                {director?.length > 0 && (
+                                                    <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
+                                                        <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
+                                                            Director:{" "}
+                                                        </span>
+                                                        <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
+                                                            {director?.map(
+                                                                (d, i) => {
+                                                                    return (
+                                                                        <span
+                                                                            key={
+                                                                                i
+                                                                            }
+                                                                        >
+                                                                            {d?.name ||
+                                                                                d?.title}
+                                                                            {director?.length -
+                                                                                1 !==
+                                                                                i &&
+                                                                                ", "}
+                                                                        </span>
+                                                                    );
+                                                                }
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {writer?.length > 0 && (
+                                                    <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
+                                                        <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
+                                                            Writer:{" "}
+                                                        </span>
+                                                        <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
+                                                            {writer?.map(
+                                                                (d, i) => (
+                                                                    <span
+                                                                        key={i}
+                                                                    >
+                                                                        {
+                                                                            d?.name
+                                                                        }
+                                                                        {writer?.length -
+                                                                            1 !==
+                                                                            i &&
+                                                                            ", "}
+                                                                    </span>
+                                                                )
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {data?.created_by?.length >
+                                                    0 && (
+                                                    <div className="info border-b border-solid border-b-[rgba(255,_255,_255,_0.1)] py-1 md:py-[15px] px-0">
+                                                        <span className="text mb-[10px] text-xs md:text-sm leading-6 bold font-semibold opacity-100">
+                                                            Creator:{" "}
+                                                        </span>
+                                                        <span className="text mb-[10px] text-xs md:text-sm opacity-50 leading-6 font-semibold">
+                                                            {data?.created_by.map(
+                                                                (d, i) => (
+                                                                    <span
+                                                                        key={i}
+                                                                    >
+                                                                        {
+                                                                            d?.name
+                                                                        }
+                                                                        {data
+                                                                            ?.created_by
+                                                                            .length -
+                                                                            1 !==
+                                                                            i &&
+                                                                            ", "}
+                                                                    </span>
+                                                                )
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 </div>

@@ -7,8 +7,12 @@ import {
     BsFillArrowLeftCircleFill,
     BsFillArrowRightCircleFill,
 } from "react-icons/bs";
+import useFetch from "../../../hooks/useFetch";
 
-const Cast = ({ data, loading }) => {
+const Cast = ({ mediaType, id }) => {
+    const { data, loading } = useFetch(
+        `/${mediaType}/${id}/credits`
+    );
     const { url } = useSelector((state) => state.home);
 
     const carouselContainer = useRef();
@@ -38,14 +42,14 @@ const Cast = ({ data, loading }) => {
         <>
             {!loading ? (
                 <>
-                    {data?.length > 0 && (
+                    {data?.cast?.length > 0 && (
                         <>
                             <div className="castSection relative z-[1]">
                                 <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 relative">
                                     <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4">
                                         Top Cast
                                     </div>
-                                    {data?.length >= 7 && (
+                                    {data?.cast?.length >= 7 && (
                                         <>
                                             <BsFillArrowLeftCircleFill
                                                 className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
@@ -65,7 +69,7 @@ const Cast = ({ data, loading }) => {
                                         className="listItems scroll-pl-6 snap-x flex gap-4 sm:gap-6 overflow-y-hidden md:overflow-hidden -mx-5 md:m-0 px-5 py-0 md:p-0"
                                         ref={carouselContainer}
                                     >
-                                        {data?.map((item) => {
+                                        {data?.cast?.map((item) => {
                                             return (
                                                 <div
                                                     key={item?.id}

@@ -1,42 +1,59 @@
-import React from "react";
-
-import useFetch from "../../hooks/useFetch";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import DetailsBanner from "./detailsBanner/DetailsBanner";
 import Cast from "./cast/Cast";
 import VideosSection from "./videosSection/VideosSection";
 import Similar from "./carousels/Similar";
 import Recommendation from "./carousels/Recommendation";
+import KnownFor from "./carousels/KnownFor";
+import CollectionCard from "./collectionCard/CollectionCard";
+import useFetch from "../../hooks/useFetch";
 
 const Details = () => {
     const { mediaType, id } = useParams();
-    const { data, loading } = useFetch(`/${mediaType}/${id}/videos`);
-    const { data: credits, loading: creditsLoading } = useFetch(
-        `/${mediaType}/${id}/credits`
-    );
-    // console.log(data);
+    const { data, loading } = useFetch(`/${mediaType}/${id}`);
+    useEffect(()=>{
+        // console.log(data?.belongs_to_collection?.id)
+    },[data])
     return (
         <div>
             <DetailsBanner
-                video={data?.results?.[0]}
-                crew={credits?.crew}
-            />
-            <Cast
-                data={credits?.cast}
-                loading={creditsLoading}
-            />
-            <VideosSection
-                datas={data}
-                loadings={loading}
-            />
-            <Similar
                 mediaType={mediaType}
                 id={id}
             />
-            <Recommendation
-                mediaType={mediaType}
-                id={id}
-            />
+            {mediaType === "person" ? (
+                <>
+                    <KnownFor
+                        mediaType={mediaType}
+                        id={id}
+                        limit={8}
+                    />
+                </>
+            ) : (
+                <>
+                    <Cast
+                        mediaType={mediaType}
+                        id={id}
+                    />
+                    <CollectionCard
+                        data={data}
+                        collectionId={data?.belongs_to_collection?.id}
+                        loading={loading}
+                    />
+                    <VideosSection
+                        mediaType={mediaType}
+                        id={id}
+                    />
+                    <Similar
+                        mediaType={mediaType}
+                        id={id}
+                    />
+                    <Recommendation
+                        mediaType={mediaType}
+                        id={id}
+                    />
+                </>
+            )}
         </div>
     );
 };

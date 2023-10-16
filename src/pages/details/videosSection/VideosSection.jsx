@@ -10,13 +10,12 @@ import {
 import { useSelector } from "react-redux";
 import useFetch from "../../../hooks/useFetch";
 
-const VideosSection = ({ mediaType, id }) => {
+const VideosSection = ({ datas, loadings }) => {
     const [bannerInfo, setBannerInfo] = useState("");
     const [show, setShow] = useState(false);
     const [videoId, setVideoId] = useState(null);
     const { url } = useSelector((state) => state.home);
 
-    const { data:datas, loading:loadings } = useFetch(`/${mediaType}/${id}/videos`);
     const { data, loading } = useFetch("/movie/upcoming");
 
     const carouselContainer = useRef();
@@ -77,7 +76,7 @@ const VideosSection = ({ mediaType, id }) => {
                                     </div>
                                 )}
                                 <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 relative">
-                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4">
+                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4 text-right">
                                         Official Videos
                                     </div>
                                     {datas?.results?.length >= 3 && (

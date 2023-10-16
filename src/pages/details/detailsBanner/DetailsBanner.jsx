@@ -2,35 +2,71 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 
-import useFetch from "../../../hooks/useFetch";
 import Genres from "../../../components/genres/Genres";
 import CircleRating from "../../../components/circleRating/CircleRating";
 import Img from "../../../components/lazyLoadImage/Img.jsx";
 import PosterFallback from "../../../assets/no-poster.png";
 import { PlayIcon } from "../PlayBtn";
 import VideoPopup from "../../../components/videoPopup/VideoPopup";
+import { FaEarthAmericas } from "react-icons/fa6";
+import { PiShareNetworkDuotone } from "react-icons/pi";
+// import useFetch from "../../../hooks/useFetch";
 import { fetchDataFromApi } from "../../../utils/api";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const DetailsBanner = ({ mediaType, id }) => {
-    const [videoData,  setVideoData] = useState('')
-    const { data: credits } = useFetch(`/${mediaType}/${id}/credits`);
-
+const DetailsBanner = ({
+    data,
+    loading,
+    credits,
+    videoData,
+    mediaType,
+    id,
+}) => {
     const [show, setShow] = useState(false);
     const [videoId, setVideoId] = useState(null);
-    const { data, loading } = useFetch(`/${mediaType}/${id}`);
     const BackdropFallback = "TFTfzrkX8L7bAKUcch6qLmjpLu.jpg";
+    // const location = useLocation();
 
-    
-    const videoApi = () => {
-        fetchDataFromApi(`/${mediaType}/${id}/videos`).then((res)=> {
-            setVideoData(res)
-        })
-    }
-    useEffect(()=>{
-        if(mediaType !== "person") {
-            videoApi()
+    const navigate = useNavigate();
+
+    // console.log(location);
+
+    const [providers, setProviders] = useState("");
+    const [providersLoading, setProvidersLoading] = useState(false);
+    const [ott, setOtt] = useState(false);
+
+    const videoApiFunction = () => {
+        setProvidersLoading(true);
+        fetchDataFromApi(`/${mediaType}/${id}/watch/providers`).then((res) => {
+            setProviders(res);
+            setProvidersLoading(false);
+        });
+    };
+
+    const handleShare = () => {
+        if (navigator.share) {
+            navigator
+                .share({
+                    title: data?.title || data?.name,
+                    text: "Check out this awesome movie website!",
+                    url: window.location.href,
+                })
+                .then(() => {
+                    console.log("shared successfully");
+                })
+                .catch((error) => {
+                    console.log("error" + error);
+                });
+        } else {
+            console.log("web share api not supported in this browser");
         }
-    },[mediaType])
+    };
+
+    useEffect(() => {
+        if (mediaType !== "person") {
+            videoApiFunction();
+        }
+    }, [mediaType]);
 
     const relativeTime = require("dayjs/plugin/relativeTime");
     dayjs.extend(relativeTime);
@@ -99,78 +135,268 @@ const DetailsBanner = ({ mediaType, id }) => {
                             <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 flex items-center justify-between relative z-[1]">
                                 <div className="content flex relative flex-col md:flex-row gap-[10px] md:gap-[50px] w-full">
                                     <div className="left shrink-0 w-full md:max-w-[350px] relative">
-                                        {mediaType === "person" ? (
-                                            <Img
-                                                className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
-                                                width={`400`}
-                                                height={`600`}
-                                                alt={
-                                                    (data?.name ||
-                                                        data?.title) &&
-                                                    (data?.name || data?.title)
-                                                }
-                                                src={
-                                                    data?.profile_path
-                                                        ? url.profile_sizes_w45 +
-                                                          data?.profile_path
-                                                        : PosterFallback
-                                                }
-                                                srcSet={`${
-                                                    data?.profile_path
-                                                        ? url.profile_sizes_w45 +
-                                                          data?.profile_path
-                                                        : PosterFallback
-                                                } 250w, ${
-                                                    data?.profile_path
-                                                        ? url.profile_sizes_w185 +
-                                                          data?.profile_path
-                                                        : PosterFallback
-                                                } 250w, ${
-                                                    data?.profile_path
-                                                        ? url.profile_sizes_h632 +
-                                                          data?.profile_path
-                                                        : PosterFallback
-                                                } 400w`}
-                                            />
-                                        ) : (
-                                            <Img
-                                                className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
-                                                width={`400`}
-                                                height={`600`}
-                                                alt={
-                                                    (data?.name ||
-                                                        data?.title) &&
-                                                    (data?.name || data?.title)
-                                                }
-                                                src={
-                                                    data?.poster_path
-                                                        ? url.poster_sizes_w92 +
-                                                          data?.poster_path
-                                                        : PosterFallback
-                                                }
-                                                srcSet={`${
-                                                    data?.poster_path
-                                                        ? url.poster_sizes_w92 +
-                                                          data?.poster_path
-                                                        : PosterFallback
-                                                } 250w, ${
-                                                    data?.poster_path
-                                                        ? url.poster_sizes_w185 +
-                                                          data?.poster_path
-                                                        : PosterFallback
-                                                } 250w, ${
-                                                    data?.poster_path
-                                                        ? url.poster_sizes_w342 +
-                                                          data?.poster_path
-                                                        : PosterFallback
-                                                } 400w, ${
-                                                    data?.poster_path
-                                                        ? url.poster_sizes_w500 +
-                                                          data?.poster_path
-                                                        : PosterFallback
-                                                } 600w`}
-                                            />
-                                        )}
+                                        <div className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]">
+                                            {mediaType === "person" ? (
+                                                <Img
+                                                    className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
+                                                    width={`400`}
+                                                    height={`600`}
+                                                    alt={
+                                                        (data?.name ||
+                                                            data?.title) &&
+                                                        (data?.name ||
+                                                            data?.title)
+                                                    }
+                                                    src={
+                                                        data?.profile_path
+                                                            ? url.profile_sizes_w45 +
+                                                              data?.profile_path
+                                                            : PosterFallback
+                                                    }
+                                                    srcSet={`${
+                                                        data?.profile_path
+                                                            ? url.profile_sizes_w45 +
+                                                              data?.profile_path
+                                                            : PosterFallback
+                                                    } 250w, ${
+                                                        data?.profile_path
+                                                            ? url.profile_sizes_w185 +
+                                                              data?.profile_path
+                                                            : PosterFallback
+                                                    } 250w, ${
+                                                        data?.profile_path
+                                                            ? url.profile_sizes_h632 +
+                                                              data?.profile_path
+                                                            : PosterFallback
+                                                    } 400w`}
+                                                />
+                                            ) : (
+                                                <Img
+                                                    className="posterImg w-full block rounded-xl md:max-w-[350px] aspect-[20/30]"
+                                                    width={`400`}
+                                                    height={`600`}
+                                                    alt={
+                                                        (data?.name ||
+                                                            data?.title) &&
+                                                        (data?.name ||
+                                                            data?.title)
+                                                    }
+                                                    src={
+                                                        data?.poster_path
+                                                            ? url.poster_sizes_w92 +
+                                                              data?.poster_path
+                                                            : PosterFallback
+                                                    }
+                                                    srcSet={`${
+                                                        data?.poster_path
+                                                            ? url.poster_sizes_w92 +
+                                                              data?.poster_path
+                                                            : PosterFallback
+                                                    } 250w, ${
+                                                        data?.poster_path
+                                                            ? url.poster_sizes_w185 +
+                                                              data?.poster_path
+                                                            : PosterFallback
+                                                    } 250w, ${
+                                                        data?.poster_path
+                                                            ? url.poster_sizes_w342 +
+                                                              data?.poster_path
+                                                            : PosterFallback
+                                                    } 400w, ${
+                                                        data?.poster_path
+                                                            ? url.poster_sizes_w500 +
+                                                              data?.poster_path
+                                                            : PosterFallback
+                                                    } 600w`}
+                                                />
+                                            )}
+                                        </div>
+                                        {!providersLoading &&
+                                            providers?.results?.IN && (
+                                                <div className="w-full -mt-4 relative z-[1]">
+                                                    <div className="relative w-full">
+                                                        {ott && (
+                                                            <div className="w-full items-center justify-center flex-row-reverse absolute bottom-0 shadow-inner shadow-black1/40 z-[1] left-0 bg-white/20 backdrop-blur-md rounded-t-xl flex">
+                                                                {console.log(
+                                                                    providers
+                                                                        ?.results
+                                                                        ?.IN
+                                                                        ?.rent
+                                                                )}
+                                                                {providers
+                                                                    ?.results
+                                                                    ?.IN?.rent
+                                                                    ? providers?.results?.IN?.rent?.map(
+                                                                          (
+                                                                              item
+                                                                          ) => (
+                                                                              <div
+                                                                                  key={
+                                                                                      item?.provider_id
+                                                                                  }
+                                                                                  className="w-full max-w-[75px]"
+                                                                              >
+                                                                                  <div className="w-full p-3">
+                                                                                      <Link
+                                                                                          title={
+                                                                                              (item?.provider_name ||
+                                                                                                  item?.title) &&
+                                                                                              (item?.provider_name ||
+                                                                                                  item?.title)
+                                                                                          }
+                                                                                          target="_blank"
+                                                                                          to={
+                                                                                              providers
+                                                                                                  ?.results
+                                                                                                  ?.IN
+                                                                                                  ?.link
+                                                                                          }
+                                                                                          className="w-full block rounded-xl overflow-hidden aspect-square relative border-2 border-black1/20 duration-300 cursor-pointer scale-90 hover:scale-100"
+                                                                                      >
+                                                                                          <Img
+                                                                                              className="posterImg w-full block aspect-square"
+                                                                                              width={`40`}
+                                                                                              height={`40`}
+                                                                                              alt={
+                                                                                                  (item?.provider_name ||
+                                                                                                      item?.title) &&
+                                                                                                  (item?.provider_name ||
+                                                                                                      item?.title)
+                                                                                              }
+                                                                                              src={
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w45 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              }
+                                                                                              srcSet={`${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w45 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 250w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w92 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 280w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w154 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 300w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w185 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 340w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w300 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 370w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w500 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 400w`}
+                                                                                          />
+                                                                                      </Link>
+                                                                                  </div>
+                                                                              </div>
+                                                                          )
+                                                                      )
+                                                                    : providers?.results?.IN?.flatrate?.map(
+                                                                          (
+                                                                              item
+                                                                          ) => (
+                                                                              <div
+                                                                                  key={
+                                                                                      item?.provider_id
+                                                                                  }
+                                                                                  className="w-full max-w-[75px]"
+                                                                              >
+                                                                                  <div className="w-full p-3">
+                                                                                      <div
+                                                                                          title={
+                                                                                              (item?.provider_name ||
+                                                                                                  item?.title) &&
+                                                                                              (item?.provider_name ||
+                                                                                                  item?.title)
+                                                                                          }
+                                                                                          onClick={() => {
+                                                                                              navigate(
+                                                                                                  ``
+                                                                                              );
+                                                                                          }}
+                                                                                          className="w-full block rounded-xl overflow-hidden aspect-square relative border-2 border-black1/20 duration-300 cursor-pointer scale-90 hover:scale-100"
+                                                                                      >
+                                                                                          <Img
+                                                                                              className="posterImg w-full block aspect-square"
+                                                                                              width={`40`}
+                                                                                              height={`40`}
+                                                                                              alt={
+                                                                                                  (item?.provider_name ||
+                                                                                                      item?.title) &&
+                                                                                                  (item?.provider_name ||
+                                                                                                      item?.title)
+                                                                                              }
+                                                                                              src={
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w45 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              }
+                                                                                              srcSet={`${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w45 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 250w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w92 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 280w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w154 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 300w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w185 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 340w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w300 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 370w, ${
+                                                                                                  item?.logo_path
+                                                                                                      ? url.logo_sizes_w500 +
+                                                                                                        item?.logo_path
+                                                                                                      : PosterFallback
+                                                                                              } 400w`}
+                                                                                          />
+                                                                                      </div>
+                                                                                  </div>
+                                                                              </div>
+                                                                          )
+                                                                      )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div
+                                                        className="watchBtn w-full py-2 md:py-3 px-3 md:px-4 font-bold text-white bg-gradient-to-t from-black1 shadow-md shadow-gray/40 to-pink text-center cursor-pointer rounded-b-xl duration-300 md:hover:tracking-widest md:hover:from-black1 md:hover:to-blacklight"
+                                                        onClick={() => {
+                                                            setOtt(!ott);
+                                                        }}
+                                                    >
+                                                        Watch Now
+                                                    </div>
+                                                </div>
+                                            )}
                                     </div>
                                     <div className="right text-white shrink-1">
                                         {(data?.name || data?.title) && (
@@ -229,6 +455,18 @@ const DetailsBanner = ({ mediaType, id }) => {
                                                             />
                                                         </>
                                                     )}
+                                                    {data?.homepage && (
+                                                        <Link
+                                                            to={data?.homepage}
+                                                            target="_blank"
+                                                            className="w-7 md:w-12 h-7 md:h-12 grid items-center justify-center shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px]"
+                                                        >
+                                                            <FaEarthAmericas
+                                                                className="text-2xl md:text-5xl cursor-pointer duration-300 hover:scale-90"
+                                                                title={`Website : ${data?.homepage}`}
+                                                            />
+                                                        </Link>
+                                                    )}
                                                     {videoData?.results?.[0]
                                                         ?.key && (
                                                         <>
@@ -253,6 +491,15 @@ const DetailsBanner = ({ mediaType, id }) => {
                                                             </div>
                                                         </>
                                                     )}
+                                                    <button
+                                                        onClick={handleShare}
+                                                        className="w-7 md:w-12 h-7 md:h-12 grid items-center justify-center shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px]"
+                                                    >
+                                                        <PiShareNetworkDuotone
+                                                            className="text-2xl md:text-4xl cursor-pointer duration-300 hover:scale-90"
+                                                            title={`Website : ${data?.homepage}`}
+                                                        />
+                                                    </button>
                                                 </div>
                                             </>
                                         )}
@@ -270,9 +517,9 @@ const DetailsBanner = ({ mediaType, id }) => {
                                                 </div>
                                             </div>
                                         )}
-                                        <div className="info py-[15px] px-0 flex border-b border-solid gap-3 border-b-[rgba(255,_255,_255,_0.1)]">
+                                        <div className="info py-[15px] px-0 flex flex-wrap border-b border-solid gap-3 border-b-[rgba(255,_255,_255,_0.1)]">
                                             {(data?.status || data?.gender) && (
-                                                <div className="infoItem flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
+                                                <div className="infoItem shrink-0 grow md:grow-0 flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
                                                     <span className="text lg:mb-[5px] max-xl:flex text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         {data?.status
                                                             ? "Status"
@@ -295,7 +542,7 @@ const DetailsBanner = ({ mediaType, id }) => {
                                             )}
                                             {(data?.release_date ||
                                                 data?.birthday) && (
-                                                <div className="infoItem flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
+                                                <div className="infoItem shrink-0 grow md:grow-0 flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
                                                     <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         {data?.release_date
                                                             ? "Release Date"
@@ -338,7 +585,7 @@ const DetailsBanner = ({ mediaType, id }) => {
                                                 </div>
                                             )}
                                             {data?.deathday && (
-                                                <div className="infoItem flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
+                                                <div className="infoItem shrink-0 grow md:grow-0 flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
                                                     <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         Deathday{" "}
                                                     </span>
@@ -351,7 +598,7 @@ const DetailsBanner = ({ mediaType, id }) => {
                                             )}
                                             {(data?.runtime ||
                                                 data?.place_of_birth) && (
-                                                <div className="infoItem flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
+                                                <div className="infoItem shrink-0 grow md:grow-0 flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
                                                     <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         {data?.runtime
                                                             ? "Runtime"
@@ -372,11 +619,11 @@ const DetailsBanner = ({ mediaType, id }) => {
                                                     </span>
                                                 </div>
                                             )}
-                                            <div className="infoItem flex flex-col flex-wrap overflow-hidden border-2 border-solid border-gray/[0.5] bg-gray/[0.3] rounded-lg duration-300 hover:bg-gray-dark cursor-pointer">
-                                                <span className="text lg:mt-[5px] text-xs md:text-sm leading-6 bold font-semibold px-2 pt-1">
+                                            <div className="infoItem shrink-0 grow md:grow-0 w-full sm:w-auto flex-wrap flex justify-center sm:flex-col overflow-hidden border-2 border-solid border-gray/[0.5] bg-gray/[0.3] rounded-lg duration-300 hover:bg-gray-dark cursor-pointer">
+                                                <span className="text lg:mt-[5px] text-xs md:text-sm leading-6 bold font-semibold sm:px-2 pr-1 sm:pt-1">
                                                     View
                                                 </span>
-                                                <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 font-semibold px-2 pb-1">
+                                                <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 font-semibold sm:px-2 sm:pb-1">
                                                     More
                                                 </span>
                                             </div>
@@ -517,6 +764,11 @@ const DetailsBanner = ({ mediaType, id }) => {
                             <div className="left shrink-0 w-full block rounded-xl aspect-[1/1.5] md:max-w-[350px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
                             <div className="right w-full">
                                 <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                <div className="row flex items-center gap-[25px] w-full">
+                                    <div className="flex items-center gap-[25px] w-[70px] h-[70px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                    <div className="flex items-center gap-[25px] w-[70px] h-[70px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                    <div className="flex items-center gap-[25px] w-[70px] h-[70px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
+                                </div>
                                 <div className="row flex items-center gap-[25px] w-3/4 h-[25px] mb-12 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
                                 <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>
                                 <div className="row flex items-center gap-[25px] w-full h-[25px] mb-5 rounded-[50px] skeleton relative overflow-hidden bg-gray-dark after:absolute after:inset-0 after:translate-x-[-100%] after:bg-gradient4 after:animate-shimmer"></div>

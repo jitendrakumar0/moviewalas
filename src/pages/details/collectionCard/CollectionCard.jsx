@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import useFetch from "../../../hooks/useFetch";
 import Img from "../../../components/lazyLoadImage/Img";
 import PosterFallback from "../../../assets/no-poster.png";
 import { useSelector } from "react-redux";
@@ -25,9 +24,6 @@ const CollectionCard = ({ data, collectionId, loading }) => {
             collectionDataFunction();
         }
     }, [collectionId]);
-    useEffect(() => {
-        console.log(collection);
-    }, [collectionLoadings]);
     return (
         <>
             {!loading ? (
@@ -36,7 +32,7 @@ const CollectionCard = ({ data, collectionId, loading }) => {
                         <>
                             <div className="castSection22 relative z-[1] py-5">
                                 <div className="w-full max-w-[1200px] my-0 mx-auto md:py-4 px-5 relative">
-                                    <div className="backdrop-img w-full h-full absolute z-0 top-0 left-0 opacity-40 overflow-hidden">
+                                    <div className="backdrop-img absolute z-0 top-0 left-5 right-5 bottom-0 opacity-40 overflow-hidden">
                                         <Img
                                             className={`w-full h-full object-cover object-center`}
                                             width={`1280`}
@@ -85,8 +81,8 @@ const CollectionCard = ({ data, collectionId, loading }) => {
                                             } 600w`}
                                         />
                                     </div>
-                                    <div className="w-full flex flex-row flex-wrap py-4 md:py-10 px-4 md:px-5 relative z-[1] items-center">
-                                        <div className="w-[200px]">
+                                    <div className="w-full flex flex-row flex-wrap sm:py-4 md:py-10 sm:px-4 md:px-5 relative z-[1] items-center max-sm:gap-5 max-sm:py-4">
+                                        <div className="w-full block sm:hidden md:block md:w-[200px]">
                                             <div className="posterBlock relative w-full aspect-[1/1.5] bg-cover bg-center flex items-end justify-between p-2">
                                                 <Img
                                                     src={
@@ -134,7 +130,7 @@ const CollectionCard = ({ data, collectionId, loading }) => {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="w-[calc(100%-200px)] flex flex-col gap-4 pl-5">
+                                        <div className="w-full md:w-[calc(100%-200px)] flex flex-col gap-4 sm:pl-5">
                                             <div className="w-full text-white text-md md:text-lg lg:text-2xl font-bold">
                                                 Part of {collection?.name}
                                             </div>
@@ -163,7 +159,7 @@ const CollectionCard = ({ data, collectionId, loading }) => {
                                             </div>
                                             <div className="w-full flex flex-col pt-3">
                                                 <div
-                                                    className="w-[200px] cursor-pointer py-2 px-5 border-2 border-solid rounded-full mr-auto font-bold border-white/40 text-white bg-black1/60 hover:bg-white/10"
+                                                    className="w-[150px] sm:w-[200px] text-center cursor-pointer text-xs sm:text-base py-2 px-4 sm:px-5 border-2 border-solid rounded-full mr-auto font-bold border-white/40 text-white bg-black1/60 hover:bg-white/10"
                                                     onClick={() =>
                                                         navigate(
                                                             `/collection/${collection?.id}`

@@ -47,13 +47,13 @@ const Carousel = ({ data, loading, endpoint, title }) => {
     };
     return (
         <div className="carousel mb-12">
-            <div className="w-full max-w-[1200px] my-0 mx-auto py-0 px-5 relative">
+            <div className="w-full max-w-[1200px] my-0 mx-auto py-0 px-5 relative z-[1]">
                 {!loading ? (
                     <>
                         {data?.length > 0 ? (
                             <>
                                 {title && (
-                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4">
+                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4 text-right">
                                         {title}
                                     </div>
                                 )}
@@ -70,7 +70,7 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                     </>
                                 )}
                                 <div
-                                    className="carouselItems scroll-pl-6 snap-x flex gap-2 md:gap-5 lg:gap-[19px] overflow-y-hidden md:overflow-hidden -mr-5 md:m-0 -ml-5 px-5 md:p-0"
+                                    className="carouselItems max-md:scroll-pl-6 snap-x flex gap-2 md:gap-5 lg:gap-[19px] overflow-y-hidden md:overflow-hidden -mr-5 md:m-0 -ml-5 px-5 md:p-0"
                                     ref={carouselContainer}
                                 >
                                     {data?.map((item) => {
@@ -120,12 +120,12 @@ const Carousel = ({ data, loading, endpoint, title }) => {
                                                     />
                                                     <CircleRating
                                                         className={`w-7 md:w-8 h-w-7 md:h-8 relative top-7 shrink-0 bg-black1 rounded-full p-[2px] text-3xl`}
-                                                        rating={item?.vote_average.toFixed(
+                                                        rating={item?.vote_average?.toFixed(
                                                             1
                                                         )}
                                                     />
                                                     <Genres
-                                                        data={item?.genre_ids.slice(
+                                                        data={item?.genre_ids?.slice(
                                                             0,
                                                             2
                                                         )}

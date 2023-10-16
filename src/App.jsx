@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { fetchDataFromApi } from "./utils/api";
+import { Context } from "./context/context";
 
 import { useDispatch } from "react-redux";
 import { getApiConfigration, getGenres } from "./store/homeSlice";
@@ -14,9 +15,14 @@ import SearchResult from "./pages/searchResult/SearchResult";
 import Explore from "./pages/explore/Explore";
 import PageNotFound from "./pages/404/PageNotFound";
 import Collection from "./pages/collection/Collection";
+import { useState } from "react";
 
 const App = () => {
     const dispatch = useDispatch();
+    
+    const [show, setShow] = useState(false);
+    const [beforeScroll, setBeforeScroll] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
 
     // const { url } = useSelector((state) => state.home);
     // console.log(url);
@@ -60,37 +66,41 @@ const App = () => {
         dispatch(getGenres(allGenres));
     };
     return (
-        <BrowserRouter>
-            <div className="hidden bg-black1 select-none selection:bg-[transparent] selection:text-[transparent]"></div>
-            <Header />
-            <Routes>
-                <Route
-                    path="/"
-                    element={<Home />}
-                />
-                <Route
-                    path="/:mediaType/:id"
-                    element={<Details />}
-                />
-                <Route
-                    path="/search/:query"
-                    element={<SearchResult />}
-                />
-                <Route
-                    path="/explore/:mediaType"
-                    element={<Explore />}
-                />
-                <Route
-                    path="/collection/:id"
-                    element={<Collection />}
-                />
-                <Route
-                    path="*"
-                    element={<PageNotFound />}
-                />
-            </Routes>
-            <Footer />
-        </BrowserRouter>
+        <Context.Provider value={{
+            show,setShow,beforeScroll,setBeforeScroll,lastScrollY,setLastScrollY
+        }}>
+            <BrowserRouter>
+                <div className="hidden bg-black1 select-none selection:bg-[transparent] selection:text-[transparent]"></div>
+                <Header />
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<Home />}
+                    />
+                    <Route
+                        path="/:mediaType/:id"
+                        element={<Details />}
+                    />
+                    <Route
+                        path="/search/:query"
+                        element={<SearchResult />}
+                    />
+                    <Route
+                        path="/explore/:mediaType"
+                        element={<Explore />}
+                    />
+                    <Route
+                        path="/collection/:id"
+                        element={<Collection />}
+                    />
+                    <Route
+                        path="*"
+                        element={<PageNotFound />}
+                    />
+                </Routes>
+                <Footer />
+            </BrowserRouter>
+        </Context.Provider>
     );
 };
 

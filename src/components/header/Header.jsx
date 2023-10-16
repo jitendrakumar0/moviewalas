@@ -5,17 +5,18 @@ import { VscChromeClose } from "react-icons/vsc";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
 import logo from "../../assets/movix-logo.svg";
+import { useContext } from "react";
+import { Context } from "../../context/context";
 
 const Header = () => {
-    const [show, setShow] = useState(false);
-    const [beforeScroll, setBeforeScroll] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
     const [mobileMenu, setMobileMenu] = useState(false);
     const [query, setQuery] = useState("");
     const [showSearch, setShowSearch] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
     const searchInputFocus = useRef(null);
+    
+    const {show, setShow, beforeScroll, setBeforeScroll, lastScrollY, setLastScrollY} = useContext(Context);
 
     useEffect(() => {
         window.scrollTo(0, 0);

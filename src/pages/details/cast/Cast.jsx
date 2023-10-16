@@ -7,13 +7,11 @@ import {
     BsFillArrowLeftCircleFill,
     BsFillArrowRightCircleFill,
 } from "react-icons/bs";
-import useFetch from "../../../hooks/useFetch";
+import { useNavigate } from "react-router-dom";
 
-const Cast = ({ mediaType, id }) => {
-    const { data, loading } = useFetch(
-        `/${mediaType}/${id}/credits`
-    );
+const Cast = ({ data, loading }) => {
     const { url } = useSelector((state) => state.home);
+    const navigate = useNavigate();
 
     const carouselContainer = useRef();
     const navigation = (dir) => {
@@ -46,7 +44,7 @@ const Cast = ({ mediaType, id }) => {
                         <>
                             <div className="castSection relative z-[1]">
                                 <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 relative">
-                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4">
+                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4 text-right">
                                         Top Cast
                                     </div>
                                     {data?.cast?.length >= 7 && (
@@ -73,7 +71,12 @@ const Cast = ({ mediaType, id }) => {
                                             return (
                                                 <div
                                                     key={item?.id}
-                                                    className="listItem delay-75 duration-300 hover:scale-95 snap-start text-white w-[125px] sm:w-[20%] md:w-[17.7%] lg:w-[14.95%] xl:w-[12.5%] shrink-0"
+                                                    className="listItem delay-75 duration-300 cursor-pointer hover:scale-95 snap-start text-white w-[125px] sm:w-[20%] md:w-[17.7%] lg:w-[14.95%] xl:w-[12.5%] shrink-0"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/person/${item?.id}`
+                                                        )
+                                                    }
                                                 >
                                                     <div className="profileImg w-full aspect-[20/30] rounded-t-2xl overflow-hidden mb-[15px] md:mb-[25px] relative">
                                                         <div className="opacity-layer w-full h-[60px] bg-gradient3 absolute bottom-0 left-0 z-[1]"></div>

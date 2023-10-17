@@ -13,7 +13,7 @@ import PosterFallback from "../../assets/no-poster.png";
 import CircleRating from "../circleRating/CircleRating";
 import Genres from "../genres/Genres";
 
-const Carousel = ({ data, loading, endpoint, title }) => {
+const Carousel = ({ data, loading, endpoint, title, className }) => {
     const { url } = useSelector((state) => state.home);
     const navigate = useNavigate();
 
@@ -46,14 +46,14 @@ const Carousel = ({ data, loading, endpoint, title }) => {
         );
     };
     return (
-        <div className="carousel mb-12">
+        <div className={`carousel mb-12 ${className}`}>
             <div className="w-full max-w-[1200px] my-0 mx-auto py-0 px-5 relative z-[1]">
                 {!loading ? (
                     <>
                         {data?.length > 0 ? (
                             <>
                                 {title && (
-                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4 text-right">
+                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4">
                                         {title}
                                     </div>
                                 )}

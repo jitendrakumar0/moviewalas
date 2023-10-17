@@ -6,10 +6,11 @@ import avatar from "../../../assets/avatar.png";
 import {
     BsFillArrowLeftCircleFill,
     BsFillArrowRightCircleFill,
+    BsChevronRight,
 } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
-const Cast = ({ data, loading }) => {
+const Cast = ({ data, loading, className, navTabs, setNavTabs, heading }) => {
     const { url } = useSelector((state) => state.home);
     const navigate = useNavigate();
 
@@ -40,38 +41,63 @@ const Cast = ({ data, loading }) => {
         <>
             {!loading ? (
                 <>
-                    {data?.cast?.length > 0 && (
+                    {data?.length > 0 && (
                         <>
-                            <div className="castSection relative z-[1]">
+                            <div
+                                className={`castSection relative z-[1] ${className}`}
+                            >
                                 <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 relative">
-                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4 text-right">
-                                        Top Cast
+                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4">
+                                        {heading || 'Top Cast'}{" "}
+                                        {navTabs !== "Cast & Crew" && (
+                                            <div
+                                                onClick={() => {
+                                                    setNavTabs("Cast & Crew");
+                                                }}
+                                                className="text-sm inline-flex items-center gap-2 hover:gap-4 duration-200 cursor-pointer text-gray-light ml-4 py-1 px-3 bg-gray/20 rounded-full"
+                                            >
+                                                View All <BsChevronRight />
+                                            </div>
+                                        )}
                                     </div>
-                                    {data?.cast?.length >= 7 && (
+                                    {data?.length >= 7 && (
                                         <>
-                                            <BsFillArrowLeftCircleFill
-                                                className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
-                                                onClick={() =>
-                                                    navigation("left")
-                                                }
-                                            />
-                                            <BsFillArrowRightCircleFill
-                                                className="carouselRightNav arrow right-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
-                                                onClick={() =>
-                                                    navigation("right")
-                                                }
-                                            />
+                                            {navTabs !== "Cast & Crew" && (
+                                                <>
+                                                    <BsFillArrowLeftCircleFill
+                                                        className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
+                                                        onClick={() =>
+                                                            navigation("left")
+                                                        }
+                                                    />
+                                                    <BsFillArrowRightCircleFill
+                                                        className="carouselRightNav arrow right-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
+                                                        onClick={() =>
+                                                            navigation("right")
+                                                        }
+                                                    />
+                                                </>
+                                            )}
                                         </>
                                     )}
                                     <div
-                                        className="listItems scroll-pl-6 snap-x flex gap-4 sm:gap-6 overflow-y-hidden md:overflow-hidden -mx-5 md:m-0 px-5 py-0 md:p-0"
+                                        className={`listItems scroll-pl-6 snap-x gap-4 sm:gap-6 overflow-y-hidden md:overflow-hidden -mx-5 md:m-0 px-5 py-0 md:p-0 ${
+                                            navTabs === "Cast & Crew"
+                                                ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+                                                : "flex"
+                                        }`}
                                         ref={carouselContainer}
                                     >
-                                        {data?.cast?.map((item) => {
+                                        {data?.map((item, index) => {
                                             return (
                                                 <div
-                                                    key={item?.id}
-                                                    className="listItem delay-75 duration-300 cursor-pointer hover:scale-95 snap-start text-white w-[125px] sm:w-[20%] md:w-[17.7%] lg:w-[14.95%] xl:w-[12.5%] shrink-0"
+                                                    key={index}
+                                                    className={`listItem delay-75 duration-300 cursor-pointer hover:scale-95 snap-start text-white shrink-0 ${
+                                                        navTabs ===
+                                                        "Cast & Crew"
+                                                            ? ""
+                                                            : " w-[125px] sm:w-[20%] md:w-[17.7%] lg:w-[14.95%] xl:w-[12.5%]"
+                                                    }`}
                                                     onClick={() =>
                                                         navigate(
                                                             `/person/${item?.id}`

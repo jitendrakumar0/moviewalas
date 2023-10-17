@@ -21,6 +21,7 @@ const DetailsBanner = ({
     videoData,
     mediaType,
     id,
+    dataRef
 }) => {
     const [show, setShow] = useState(false);
     const [videoId, setVideoId] = useState(null);
@@ -90,7 +91,7 @@ const DetailsBanner = ({
     return (
         <>
             {!loading ? (
-                <div className="detailsBanner w-full bg-black1 pt-[70px] md:pt-[100px] mb-[50px] md:mb-0 md:min-h-[700px] before:absolute before:inset-0 before:z-[1] z-0 before:bg-gradient1 before:mix-blend-color">
+                <div ref={dataRef} className="detailsBanner w-full md:pb-8 bg-black1 pt-[70px] md:pt-[100px] mb-[30px] md:mb-0 md:min-h-[700px] before:absolute before:inset-0 before:z-[1] z-0 before:bg-gradient1 before:mix-blend-color">
                     {!!data && (
                         <React.Fragment>
                             <div className="backdrop-img w-full h-full absolute top-0 left-0 opacity-10 overflow-hidden">

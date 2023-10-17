@@ -32,7 +32,7 @@ const Header = () => {
         // console.log(window.scrollY);
         if (window.scrollY > 100) {
             setShow(true);
-            if (window.scrollY > lastScrollY && !mobileMenu) {
+            if (window.scrollY > lastScrollY) {
                 setBeforeScroll(false);
             } else {
                 setBeforeScroll(true);

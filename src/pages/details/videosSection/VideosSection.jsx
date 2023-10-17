@@ -4,13 +4,22 @@ import VideoPopup from "../../../components/videoPopup/VideoPopup";
 import Img from "../../../components/lazyLoadImage/Img";
 import { PlayIcon } from "../PlayBtn";
 import {
+    BsChevronRight,
     BsFillArrowLeftCircleFill,
     BsFillArrowRightCircleFill,
 } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import useFetch from "../../../hooks/useFetch";
 
-const VideosSection = ({ datas, loadings }) => {
+const VideosSection = ({
+    datas,
+    loadings,
+    heading,
+    navTabs,
+    setNavTabs,
+    mediaOption,
+    setMediaOption,
+}) => {
     const [bannerInfo, setBannerInfo] = useState("");
     const [show, setShow] = useState(false);
     const [videoId, setVideoId] = useState(null);
@@ -54,55 +63,82 @@ const VideosSection = ({ datas, loadings }) => {
                         <>
                             <div className="videosSection relative py-5 md:py-10 my-5 md:my-7">
                                 {!loading && (
-                                    <div className="opacity-20">
-                                        <Img
-                                            className={`w-full h-full object-cover object-center`}
-                                            src={
-                                                url?.backdrop_sizes_w1280 +
-                                                bannerInfo?.backdrop_path
-                                            }
-                                            srcSet={`${
-                                                url?.backdrop_sizes_w300 +
-                                                bannerInfo?.backdrop_path
-                                            } 400w, ${
-                                                url?.backdrop_sizes_w780 +
-                                                bannerInfo?.backdrop_path
-                                            } 900w, ${
-                                                url?.backdrop_sizes_w1280 +
-                                                bannerInfo?.backdrop_path
-                                            } 1200w`}
-                                            alt={bannerInfo?.title}
-                                        />
-                                    </div>
+                                    <>
+                                        {navTabs === "Overview" && (
+                                            <div className="opacity-20">
+                                                <Img
+                                                    className={`w-full h-full object-cover object-center`}
+                                                    src={
+                                                        url?.backdrop_sizes_w1280 +
+                                                        bannerInfo?.backdrop_path
+                                                    }
+                                                    srcSet={`${
+                                                        url?.backdrop_sizes_w300 +
+                                                        bannerInfo?.backdrop_path
+                                                    } 400w, ${
+                                                        url?.backdrop_sizes_w780 +
+                                                        bannerInfo?.backdrop_path
+                                                    } 900w, ${
+                                                        url?.backdrop_sizes_w1280 +
+                                                        bannerInfo?.backdrop_path
+                                                    } 1200w`}
+                                                    alt={bannerInfo?.title}
+                                                />
+                                            </div>
+                                        )}
+                                    </>
                                 )}
                                 <div className="w-full max-w-[1200px] my-0 mx-auto pb-2 md:pb-4 px-5 relative">
-                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4 text-right">
-                                        Official Videos
+                                    <div className="sectionHeading text-sm md:text-lg lg:text-2xl text-white font-bold mb-4">
+                                        {heading || "Official Videos"}{" "}
+                                        {navTabs !== "Media" && (
+                                            <div
+                                                onClick={() => {
+                                                    setNavTabs("Media");
+                                                    setMediaOption("Videos");
+                                                }}
+                                                className="text-sm inline-flex items-center gap-2 hover:gap-4 duration-200 cursor-pointer text-gray-light ml-4 py-1 px-3 bg-gray/20 rounded-full"
+                                            >
+                                                View All <BsChevronRight />
+                                            </div>
+                                        )}
                                     </div>
                                     {datas?.results?.length >= 3 && (
                                         <>
-                                            <BsFillArrowLeftCircleFill
-                                                className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
-                                                onClick={() =>
-                                                    navigation("left")
-                                                }
-                                            />
-                                            <BsFillArrowRightCircleFill
-                                                className="carouselRightNav arrow right-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
-                                                onClick={() =>
-                                                    navigation("right")
-                                                }
-                                            />
+                                            {navTabs === "Overview" && (
+                                                <>
+                                                    <BsFillArrowLeftCircleFill
+                                                        className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
+                                                        onClick={() =>
+                                                            navigation("left")
+                                                        }
+                                                    />
+                                                    <BsFillArrowRightCircleFill
+                                                        className="carouselRightNav arrow right-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
+                                                        onClick={() =>
+                                                            navigation("right")
+                                                        }
+                                                    />
+                                                </>
+                                            )}
                                         </>
                                     )}
                                     <div
-                                        className="videos max-md:scroll-pl-3 snap-x flex flex-row flex-nowrap overflow-y-hidden md:overflow-hidden -mx-5 md:-mx-2 px-5 py-0 md:p-0"
+                                        className={`videos max-md:scroll-pl-3 snap-x overflow-y-hidden md:overflow-hidden -mx-5 md:-mx-2 px-5 py-0 md:p-0 ${
+                                            navTabs === "Overview"
+                                                ? "flex flex-row flex-nowrap"
+                                                : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-y-8 gap-x-4"
+                                        }`}
                                         ref={carouselContainer}
                                     >
                                         {datas?.results?.map((video) => (
                                             <div
                                                 key={video?.id}
-                                                className="videoItem snap-start w-[180px] sm:w-[200px] md:w-1/4 px-2 shrink-0 cursor-pointer delay-75 duration-300 hover:scale-95"
+                                                className={`videoItem snap-start px-2 shrink-0 cursor-pointer delay-75 duration-300 hover:scale-95 ${
+                                                    navTabs === "Overview"
+                                                        ? "w-[180px] sm:w-[200px] md:w-1/4"
+                                                        : ""
+                                                }`}
                                                 onClick={() => {
                                                     setVideoId(video?.key);
                                                     setShow(true);

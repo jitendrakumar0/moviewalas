@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import Carousel from "../../../components/carousel/Carousel";
 
-const KnownFor = ({ data, loading, limit, mediaType }) => {
+const KnownFor = ({ data, loading, limit, mediaType, className }) => {
     const [knownForData, setKnownForData] = useState([]);
     const sortedData = data?.cast?.slice().sort((a, b) => {
         return new Date(b.release_date) - new Date(a.release_date);
@@ -14,6 +14,7 @@ const KnownFor = ({ data, loading, limit, mediaType }) => {
     },[data])
     return (
         <Carousel
+            className={className}
             title="Known For"
             data={knownForData}
             loading={loading}

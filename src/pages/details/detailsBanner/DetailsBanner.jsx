@@ -10,9 +10,8 @@ import { PlayIcon } from "../PlayBtn";
 import VideoPopup from "../../../components/videoPopup/VideoPopup";
 import { FaEarthAmericas } from "react-icons/fa6";
 import { PiShareNetworkDuotone } from "react-icons/pi";
-// import useFetch from "../../../hooks/useFetch";
 import { fetchDataFromApi } from "../../../utils/api";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const DetailsBanner = ({
     data,
@@ -21,21 +20,20 @@ const DetailsBanner = ({
     videoData,
     mediaType,
     id,
-    dataRef
+    dataRef,
 }) => {
     const [show, setShow] = useState(false);
     const [videoId, setVideoId] = useState(null);
     const BackdropFallback = "TFTfzrkX8L7bAKUcch6qLmjpLu.jpg";
     // const location = useLocation();
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     // console.log(location);
 
     const [providers, setProviders] = useState("");
     const [providersLoading, setProvidersLoading] = useState(false);
     const [ott, setOtt] = useState(false);
-
     const videoApiFunction = () => {
         setProvidersLoading(true);
         fetchDataFromApi(`/${mediaType}/${id}/watch/providers`).then((res) => {
@@ -67,6 +65,7 @@ const DetailsBanner = ({
         if (mediaType !== "person") {
             videoApiFunction();
         }
+        setOtt(false);
     }, [mediaType]);
 
     const relativeTime = require("dayjs/plugin/relativeTime");
@@ -91,7 +90,10 @@ const DetailsBanner = ({
     return (
         <>
             {!loading ? (
-                <div ref={dataRef} className="detailsBanner w-full md:pb-8 bg-black1 pt-[70px] md:pt-[100px] mb-[30px] md:mb-0 md:min-h-[700px] before:absolute before:inset-0 before:z-[1] z-0 before:bg-gradient1 before:mix-blend-color">
+                <div
+                    ref={dataRef}
+                    className="detailsBanner w-full md:pb-8 bg-black1 pt-[70px] md:pt-[100px] mb-[30px] md:mb-0 md:min-h-[700px] before:absolute before:inset-0 before:z-[1] z-0 before:bg-gradient1 before:mix-blend-color"
+                >
                     {!!data && (
                         <React.Fragment>
                             <div className="backdrop-img w-full h-full absolute top-0 left-0 opacity-10 overflow-hidden">
@@ -212,179 +214,91 @@ const DetailsBanner = ({
                                                 />
                                             )}
                                         </div>
-                                        {!providersLoading &&
-                                            providers?.results?.IN && (
+                                        {mediaType !== "person" &&
+                                            !providersLoading &&
+                                            providers?.results?.IN?.rent && (
                                                 <div className="w-full -mt-4 relative z-[1]">
                                                     <div className="relative w-full">
                                                         {ott && (
                                                             <div className="w-full items-center justify-center flex-row-reverse absolute bottom-0 shadow-inner shadow-black1/40 z-[1] left-0 bg-white/20 backdrop-blur-md rounded-t-xl flex">
-                                                                {console.log(
-                                                                    providers
-                                                                        ?.results
-                                                                        ?.IN
-                                                                        ?.rent
+                                                                {providers?.results?.IN?.rent?.map(
+                                                                    (item) => (
+                                                                        <div
+                                                                            key={
+                                                                                item?.provider_id
+                                                                            }
+                                                                            className="w-full max-w-[75px]"
+                                                                        >
+                                                                            <div className="w-full p-3">
+                                                                                <Link
+                                                                                    title={
+                                                                                        (item?.provider_name ||
+                                                                                            item?.title) &&
+                                                                                        (item?.provider_name ||
+                                                                                            item?.title)
+                                                                                    }
+                                                                                    target="_blank"
+                                                                                    to={
+                                                                                        providers
+                                                                                            ?.results
+                                                                                            ?.IN
+                                                                                            ?.link
+                                                                                    }
+                                                                                    className="w-full block rounded-xl overflow-hidden aspect-square relative border-2 border-black1/20 duration-300 cursor-pointer scale-90 hover:scale-100"
+                                                                                >
+                                                                                    <Img
+                                                                                        className="posterImg w-full block aspect-square"
+                                                                                        width={`40`}
+                                                                                        height={`40`}
+                                                                                        alt={
+                                                                                            (item?.provider_name ||
+                                                                                                item?.title) &&
+                                                                                            (item?.provider_name ||
+                                                                                                item?.title)
+                                                                                        }
+                                                                                        src={
+                                                                                            item?.logo_path
+                                                                                                ? url.logo_sizes_w45 +
+                                                                                                  item?.logo_path
+                                                                                                : PosterFallback
+                                                                                        }
+                                                                                        srcSet={`${
+                                                                                            item?.logo_path
+                                                                                                ? url.logo_sizes_w45 +
+                                                                                                  item?.logo_path
+                                                                                                : PosterFallback
+                                                                                        } 250w, ${
+                                                                                            item?.logo_path
+                                                                                                ? url.logo_sizes_w92 +
+                                                                                                  item?.logo_path
+                                                                                                : PosterFallback
+                                                                                        } 280w, ${
+                                                                                            item?.logo_path
+                                                                                                ? url.logo_sizes_w154 +
+                                                                                                  item?.logo_path
+                                                                                                : PosterFallback
+                                                                                        } 300w, ${
+                                                                                            item?.logo_path
+                                                                                                ? url.logo_sizes_w185 +
+                                                                                                  item?.logo_path
+                                                                                                : PosterFallback
+                                                                                        } 340w, ${
+                                                                                            item?.logo_path
+                                                                                                ? url.logo_sizes_w300 +
+                                                                                                  item?.logo_path
+                                                                                                : PosterFallback
+                                                                                        } 370w, ${
+                                                                                            item?.logo_path
+                                                                                                ? url.logo_sizes_w500 +
+                                                                                                  item?.logo_path
+                                                                                                : PosterFallback
+                                                                                        } 400w`}
+                                                                                    />
+                                                                                </Link>
+                                                                            </div>
+                                                                        </div>
+                                                                    )
                                                                 )}
-                                                                {providers
-                                                                    ?.results
-                                                                    ?.IN?.rent
-                                                                    ? providers?.results?.IN?.rent?.map(
-                                                                          (
-                                                                              item
-                                                                          ) => (
-                                                                              <div
-                                                                                  key={
-                                                                                      item?.provider_id
-                                                                                  }
-                                                                                  className="w-full max-w-[75px]"
-                                                                              >
-                                                                                  <div className="w-full p-3">
-                                                                                      <Link
-                                                                                          title={
-                                                                                              (item?.provider_name ||
-                                                                                                  item?.title) &&
-                                                                                              (item?.provider_name ||
-                                                                                                  item?.title)
-                                                                                          }
-                                                                                          target="_blank"
-                                                                                          to={
-                                                                                              providers
-                                                                                                  ?.results
-                                                                                                  ?.IN
-                                                                                                  ?.link
-                                                                                          }
-                                                                                          className="w-full block rounded-xl overflow-hidden aspect-square relative border-2 border-black1/20 duration-300 cursor-pointer scale-90 hover:scale-100"
-                                                                                      >
-                                                                                          <Img
-                                                                                              className="posterImg w-full block aspect-square"
-                                                                                              width={`40`}
-                                                                                              height={`40`}
-                                                                                              alt={
-                                                                                                  (item?.provider_name ||
-                                                                                                      item?.title) &&
-                                                                                                  (item?.provider_name ||
-                                                                                                      item?.title)
-                                                                                              }
-                                                                                              src={
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w45 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              }
-                                                                                              srcSet={`${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w45 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 250w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w92 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 280w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w154 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 300w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w185 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 340w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w300 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 370w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w500 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 400w`}
-                                                                                          />
-                                                                                      </Link>
-                                                                                  </div>
-                                                                              </div>
-                                                                          )
-                                                                      )
-                                                                    : providers?.results?.IN?.flatrate?.map(
-                                                                          (
-                                                                              item
-                                                                          ) => (
-                                                                              <div
-                                                                                  key={
-                                                                                      item?.provider_id
-                                                                                  }
-                                                                                  className="w-full max-w-[75px]"
-                                                                              >
-                                                                                  <div className="w-full p-3">
-                                                                                      <div
-                                                                                          title={
-                                                                                              (item?.provider_name ||
-                                                                                                  item?.title) &&
-                                                                                              (item?.provider_name ||
-                                                                                                  item?.title)
-                                                                                          }
-                                                                                          onClick={() => {
-                                                                                              navigate(
-                                                                                                  ``
-                                                                                              );
-                                                                                          }}
-                                                                                          className="w-full block rounded-xl overflow-hidden aspect-square relative border-2 border-black1/20 duration-300 cursor-pointer scale-90 hover:scale-100"
-                                                                                      >
-                                                                                          <Img
-                                                                                              className="posterImg w-full block aspect-square"
-                                                                                              width={`40`}
-                                                                                              height={`40`}
-                                                                                              alt={
-                                                                                                  (item?.provider_name ||
-                                                                                                      item?.title) &&
-                                                                                                  (item?.provider_name ||
-                                                                                                      item?.title)
-                                                                                              }
-                                                                                              src={
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w45 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              }
-                                                                                              srcSet={`${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w45 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 250w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w92 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 280w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w154 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 300w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w185 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 340w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w300 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 370w, ${
-                                                                                                  item?.logo_path
-                                                                                                      ? url.logo_sizes_w500 +
-                                                                                                        item?.logo_path
-                                                                                                      : PosterFallback
-                                                                                              } 400w`}
-                                                                                          />
-                                                                                      </div>
-                                                                                  </div>
-                                                                              </div>
-                                                                          )
-                                                                      )}
                                                             </div>
                                                         )}
                                                     </div>
@@ -446,60 +360,62 @@ const DetailsBanner = ({
                                             videoData?.results?.[0]?.key) && (
                                             <>
                                                 <div className="row flex items-center gap-3 md:gap-[25px] mb-[25px]">
-                                                    {data?.vote_average && (
-                                                        <>
-                                                            <CircleRating
-                                                                className={`w-7 md:w-12 h-7 md:h-12 shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px] bg-black2`}
-                                                                rating={data?.vote_average?.toFixed(
-                                                                    1
-                                                                )}
-                                                            />
-                                                        </>
-                                                    )}
-                                                    {data?.homepage && (
-                                                        <Link
-                                                            to={data?.homepage}
-                                                            target="_blank"
-                                                            className="w-7 md:w-12 h-7 md:h-12 grid items-center justify-center shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px]"
-                                                        >
-                                                            <FaEarthAmericas
-                                                                className="text-2xl md:text-5xl cursor-pointer duration-300 hover:scale-90"
-                                                                title={`Website : ${data?.homepage}`}
-                                                            />
-                                                        </Link>
-                                                    )}
-                                                    {videoData?.results?.[0]
-                                                        ?.key && (
-                                                        <>
-                                                            <div
-                                                                className="playbtn flex items-center gap-2 md:gap-5 cursor-pointer md:hover:text-blue"
-                                                                onClick={() => {
-                                                                    setShow(
-                                                                        true
-                                                                    );
-                                                                    setVideoId(
-                                                                        videoData
-                                                                            ?.results?.[0]
-                                                                            ?.key
-                                                                    );
-                                                                }}
+                                                    {mediaType !== "person" &&
+                                                        data?.vote_average && (
+                                                            <>
+                                                                <CircleRating
+                                                                    className={`w-7 md:w-12 h-7 md:h-12 shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px] bg-black2`}
+                                                                    rating={data?.vote_average?.toFixed(
+                                                                        1
+                                                                    )}
+                                                                />
+                                                            </>
+                                                        )}
+                                                    {mediaType !== "person" &&
+                                                        data?.homepage && (
+                                                            <Link
+                                                                to={
+                                                                    data?.homepage
+                                                                }
+                                                                target="_blank"
+                                                                className="w-7 md:w-12 h-7 md:h-12 grid items-center justify-center shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px]"
                                                             >
-                                                                <PlayIcon className="w-6 md:w-11 h-6 md:h-11" />{" "}
-                                                                <span className="text text-sm md:text-base font-semibold transition-[all] duration-[0.7s]">
-                                                                    Watch
-                                                                    Trailer
-                                                                </span>
-                                                            </div>
-                                                        </>
-                                                    )}
+                                                                <FaEarthAmericas
+                                                                    className="text-2xl md:text-5xl cursor-pointer duration-300 hover:scale-90"
+                                                                    title={`Website : ${data?.homepage}`}
+                                                                />
+                                                            </Link>
+                                                        )}
+                                                    {mediaType !== "person" &&
+                                                        videoData?.results?.[0]
+                                                            ?.key && (
+                                                            <>
+                                                                <div
+                                                                    className="playbtn flex items-center gap-2 md:gap-5 cursor-pointer md:hover:text-blue"
+                                                                    onClick={() => {
+                                                                        setShow(
+                                                                            true
+                                                                        );
+                                                                        setVideoId(
+                                                                            videoData
+                                                                                ?.results?.[0]
+                                                                                ?.key
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    <PlayIcon className="w-6 md:w-11 h-6 md:h-11" />{" "}
+                                                                    <span className="text text-sm md:text-base font-semibold transition-[all] duration-[0.7s]">
+                                                                        Watch
+                                                                        Trailer
+                                                                    </span>
+                                                                </div>
+                                                            </>
+                                                        )}
                                                     <button
                                                         onClick={handleShare}
                                                         className="w-7 md:w-12 h-7 md:h-12 grid items-center justify-center shrink-0 rounded-full p-[2px] max-w-[70px] md:max-w-[90px]"
                                                     >
-                                                        <PiShareNetworkDuotone
-                                                            className="text-2xl md:text-4xl cursor-pointer duration-300 hover:scale-90"
-                                                            title={`Website : ${data?.homepage}`}
-                                                        />
+                                                        <PiShareNetworkDuotone className="text-2xl md:text-4xl cursor-pointer duration-300 hover:scale-90" />
                                                     </button>
                                                 </div>
                                             </>
@@ -519,7 +435,7 @@ const DetailsBanner = ({
                                             </div>
                                         )}
                                         <div className="info py-[15px] px-0 flex flex-wrap border-b border-solid gap-3 border-b-[rgba(255,_255,_255,_0.1)]">
-                                            {(data?.status || data?.gender) && (
+                                            {data?.status || data?.gender ? (
                                                 <div className="infoItem shrink-0 grow md:grow-0 flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
                                                     <span className="text lg:mb-[5px] max-xl:flex text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         {data?.status
@@ -540,9 +456,11 @@ const DetailsBanner = ({
                                                         )}
                                                     </span>
                                                 </div>
+                                            ) : (
+                                                ""
                                             )}
-                                            {(data?.release_date ||
-                                                data?.birthday) && (
+                                            {data?.release_date ||
+                                            data?.birthday ? (
                                                 <div className="infoItem shrink-0 grow md:grow-0 flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
                                                     <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         {data?.release_date
@@ -584,8 +502,10 @@ const DetailsBanner = ({
                                                         )}
                                                     </span>
                                                 </div>
+                                            ) : (
+                                                ""
                                             )}
-                                            {data?.deathday && (
+                                            {data?.deathday ? (
                                                 <div className="infoItem shrink-0 grow md:grow-0 flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
                                                     <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         Deathday{" "}
@@ -596,9 +516,11 @@ const DetailsBanner = ({
                                                         ).format("MMM D, YYYY")}
                                                     </span>
                                                 </div>
+                                            ) : (
+                                                ""
                                             )}
-                                            {(data?.runtime ||
-                                                data?.place_of_birth) && (
+                                            {data?.runtime ||
+                                            data?.place_of_birth ? (
                                                 <div className="infoItem shrink-0 grow md:grow-0 flex flex-col flex-wrap overflow-hidden border border-solid border-gray/[0.5] rounded-lg">
                                                     <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 bold font-semibold opacity-100 bg-gray/[0.3] px-2 py-1">
                                                         {data?.runtime
@@ -619,15 +541,17 @@ const DetailsBanner = ({
                                                         )}
                                                     </span>
                                                 </div>
+                                            ) : (
+                                                ""
                                             )}
-                                            <div className="infoItem shrink-0 grow md:grow-0 w-full sm:w-auto flex-wrap flex justify-center sm:flex-col overflow-hidden border-2 border-solid border-gray/[0.5] bg-gray/[0.3] rounded-lg duration-300 hover:bg-gray-dark cursor-pointer">
+                                            {/* <div className="infoItem shrink-0 grow md:grow-0 w-full sm:w-auto flex-wrap flex justify-center sm:flex-col overflow-hidden border-2 border-solid border-gray/[0.5] bg-gray/[0.3] rounded-lg duration-300 hover:bg-gray-dark cursor-pointer">
                                                 <span className="text lg:mt-[5px] text-xs md:text-sm leading-6 bold font-semibold sm:px-2 pr-1 sm:pt-1">
                                                     View
                                                 </span>
                                                 <span className="text lg:mb-[5px] text-xs md:text-sm leading-6 font-semibold sm:px-2 sm:pb-1">
                                                     More
                                                 </span>
-                                            </div>
+                                            </div> */}
                                         </div>
                                         {mediaType === "person" ? (
                                             <>

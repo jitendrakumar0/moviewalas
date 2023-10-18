@@ -12,11 +12,12 @@ import { fetchDataFromApi } from "../../utils/api";
 import { useContext } from "react";
 import { Context } from "../../context/context";
 import Gallary from "../../components/gallary/Gallary";
+import More from "./more/More";
 
 const Details = () => {
     const { mediaType, id } = useParams();
+    const [creditType, setCreditType] = useState("");
     const { data, loading } = useFetch(`/${mediaType}/${id}`);
-    const [creditType, setCreditType] = useState("credits");
     const [navTabs, setNavTabs] = useState("Overview");
     const [mediaOption, setMediaOption] = useState("Backdrops");
 
@@ -59,7 +60,6 @@ const Details = () => {
             setCreditsLoading(false);
         });
     };
-
     const videoApiFunction = () => {
         setVideoDataLoading(true);
         fetchDataFromApi(`/${mediaType}/${id}/videos`).then((res) => {
@@ -95,17 +95,37 @@ const Details = () => {
     }, [secondDivscrollPosition]);
 
     useEffect(() => {
-        if (mediaType !== "person") {
-            videoApiFunction();
-            setCreditType("credits");
-        } else {
-            setCreditType("combined_credits");
-        }
+        setTimeout(() => {
+            if (mediaType !== "person") {
+                videoApiFunction();
+                setCreditType("credits");
+            } else {
+                setCreditType("combined_credits");
+                setNavTabs("Known For");
+            }
+        }, 1000);
+        setNavTabs("Overview");
     }, [mediaType]);
 
     useEffect(() => {
+        if (mediaType !== "person") {
+            setTimeout(() => {
+                if (images?.backdrops?.length) {
+                    setMediaOption("Backdrops");
+                } else if (images?.logos?.length) {
+                    setMediaOption("Logos");
+                } else if (images?.posters?.length) {
+                    setMediaOption("Posters");
+                } else if (videoData?.results?.length) {
+                    setMediaOption("Videos");
+                }
+            }, 1000);
+        }
+    }, [images, mediaType]);
+
+    useEffect(() => {
         creditsDataFunction();
-    }, [creditType]);
+    }, [creditType, mediaType]);
 
     return (
         <div>
@@ -128,108 +148,162 @@ const Details = () => {
             >
                 <div className="w-full max-w-[1200px] my-0 mx-auto md:px-5 relative">
                     <div className="flex justify-center duration-300">
-                        <div
-                            className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
-                                navTabs === "Overview"
-                                    ? "active:bg-pink/40 bg-pink/40"
-                                    : ""
-                            }`}
-                            onClick={() => {
-                                setNavTabs("Overview");
-                            }}
-                        >
-                            <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
-                                Overview
-                            </span>
-                        </div>
-                        <div
-                            className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
-                                navTabs === "Media"
-                                    ? "active:bg-pink/40 bg-pink/40 group/select"
-                                    : ""
-                            }`}
-                            onClick={() => {
-                                setNavTabs("Media");
-                            }}
-                        >
-                            <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200 group-[]/select:hidden">
-                                Media
-                            </span>
-                            <div>
-                                <select
-                                    onChange={(e) =>
-                                        setMediaOption(e?.target?.value)
-                                    }
-                                    defaultValue={mediaOption}
-                                    className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200 hidden group-[]/select:bg-black1/0 outline-none border-0 group-[]/select:block mx-auto"
-                                    name=""
-                                    id=""
+                        {mediaType !== "person" ? (
+                            <>
+                                <div
+                                    className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
+                                        navTabs === "Overview"
+                                            ? "active:bg-pink/40 bg-pink/40"
+                                            : ""
+                                    }`}
+                                    onClick={() => {
+                                        setNavTabs("Overview");
+                                    }}
                                 >
-                                    <option
-                                        className="text-white font-semibold checked:bg-pink checked:text-white capitalize bg-black1"
-                                        selected={mediaOption === "Backdrops"}
-                                        value="Backdrops"
-                                    >
-                                        Backdrops
-                                    </option>
-                                    <option
-                                        className="text-white font-semibold checked:bg-pink checked:text-white capitalize bg-black1"
-                                        selected={mediaOption === "Logos"}
-                                        value="Logos"
-                                    >
-                                        Logos
-                                    </option>
-                                    <option
-                                        className="text-white font-semibold checked:bg-pink checked:text-white capitalize bg-black1"
-                                        selected={mediaOption === "Posters"}
-                                        value="Posters"
-                                    >
-                                        Posters
-                                    </option>
-                                    <option
-                                        className="text-white font-semibold checked:bg-pink checked:text-white capitalize bg-black1"
-                                        selected={mediaOption === "Videos"}
-                                        value="Videos"
-                                    >
-                                        Videos
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div
-                            className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
-                                navTabs === "Cast & Crew"
-                                    ? "active:bg-pink/40 bg-pink/40"
-                                    : ""
-                            }`}
-                            onClick={() => {
-                                setNavTabs("Cast & Crew");
-                            }}
-                        >
-                            <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
-                                Cast & Crew
-                            </span>
-                        </div>
-                        <div
-                            className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
-                                navTabs === "More"
-                                    ? "active:bg-pink/40 bg-pink/40"
-                                    : ""
-                            }`}
-                            onClick={() => {
-                                setNavTabs("More");
-                            }}
-                        >
-                            <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
-                                More
-                            </span>
-                        </div>
+                                    <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
+                                        Overview
+                                    </span>
+                                </div>
+                                <div
+                                    className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
+                                        navTabs === "Media"
+                                            ? "active:bg-pink/40 bg-pink/40 group/select"
+                                            : ""
+                                    }`}
+                                    onClick={() => {
+                                        setNavTabs("Media");
+                                    }}
+                                >
+                                    <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200 group-[]/select:hidden">
+                                        Media
+                                    </span>
+                                    <div>
+                                        <select
+                                            onChange={(e) =>
+                                                setMediaOption(e?.target?.value)
+                                            }
+                                            className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200 hidden group-[]/select:bg-black1/0 outline-none border-0 group-[]/select:block mx-auto"
+                                        >
+                                            {images?.backdrops?.length && (
+                                                <option
+                                                    className="text-white font-semibold checked:bg-pink checked:text-white capitalize bg-black1"
+                                                    selected={
+                                                        mediaOption ===
+                                                        "Backdrops"
+                                                    }
+                                                    value="Backdrops"
+                                                >
+                                                    Backdrops
+                                                </option>
+                                            )}
+                                            {images?.logos?.length && (
+                                                <option
+                                                    className="text-white font-semibold checked:bg-pink checked:text-white capitalize bg-black1"
+                                                    selected={
+                                                        mediaOption === "Logos"
+                                                    }
+                                                    value="Logos"
+                                                >
+                                                    Logos
+                                                </option>
+                                            )}
+                                            {images?.posters?.length && (
+                                                <option
+                                                    className="text-white font-semibold checked:bg-pink checked:text-white capitalize bg-black1"
+                                                    selected={
+                                                        mediaOption ===
+                                                        "Posters"
+                                                    }
+                                                    value="Posters"
+                                                >
+                                                    Posters
+                                                </option>
+                                            )}
+                                            {videoData?.results?.length && (
+                                                <option
+                                                    className="text-white font-semibold checked:bg-pink checked:text-white capitalize bg-black1"
+                                                    selected={
+                                                        mediaOption === "Videos"
+                                                    }
+                                                    value="Videos"
+                                                >
+                                                    Videos
+                                                </option>
+                                            )}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div
+                                    className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
+                                        navTabs === "Cast & Crew"
+                                            ? "active:bg-pink/40 bg-pink/40"
+                                            : ""
+                                    }`}
+                                    onClick={() => {
+                                        setNavTabs("Cast & Crew");
+                                    }}
+                                >
+                                    <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
+                                        Cast & Crew
+                                    </span>
+                                </div>
+                                <div
+                                    className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
+                                        navTabs === "More"
+                                            ? "active:bg-pink/40 bg-pink/40"
+                                            : ""
+                                    }`}
+                                    onClick={() => {
+                                        setNavTabs("More");
+                                    }}
+                                >
+                                    <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
+                                        More
+                                    </span>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {images?.profiles?.length && (
+                                    <>
+                                        <div
+                                            className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
+                                                navTabs === "Known For"
+                                                    ? "active:bg-pink/40 bg-pink/40"
+                                                    : ""
+                                            }`}
+                                            onClick={() => {
+                                                setNavTabs("Known For");
+                                            }}
+                                        >
+                                            <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
+                                                Known For
+                                            </span>
+                                        </div>
+                                        <div
+                                            className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
+                                                navTabs === "Images"
+                                                    ? "active:bg-pink/40 bg-pink/40"
+                                                    : ""
+                                            }`}
+                                            onClick={() => {
+                                                setNavTabs("Images");
+                                            }}
+                                        >
+                                            <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
+                                                Images
+                                            </span>
+                                        </div>
+                                    </>
+                                )}
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
             {mediaType === "person" ? (
                 <>
-                    {navTabs === "Overview" && (
+                    {navTabs === "Known For" ? (
                         <KnownFor
                             className={`pt-8`}
                             data={creditsData}
@@ -237,6 +311,19 @@ const Details = () => {
                             mediaType={mediaType}
                             limit={8}
                         />
+                    ) : (
+                        ""
+                    )}
+                    {navTabs === "Images" ? (
+                        <>
+                            <Gallary
+                                images={images?.profiles}
+                                loading={imagesLoading}
+                                className={`aspect-[2000/3000] object-cover object-center`}
+                            />
+                        </>
+                    ) : (
+                        ""
                     )}
                 </>
             ) : (
@@ -338,6 +425,13 @@ const Details = () => {
                                 id={id}
                             />
                         </>
+                    )}
+                    {navTabs === "More" && (
+                        <More
+                            id={id}
+                            data={data}
+                            loading={loading}
+                        />
                     )}
                 </>
             )}

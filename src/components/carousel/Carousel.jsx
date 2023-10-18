@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     BsFillArrowLeftCircleFill,
     BsFillArrowRightCircleFill,
@@ -13,7 +13,7 @@ import PosterFallback from "../../assets/no-poster.png";
 import CircleRating from "../circleRating/CircleRating";
 import Genres from "../genres/Genres";
 
-const Carousel = ({ data, loading, endpoint, title, className }) => {
+const Carousel = ({ data, loading, endpoint, title, className, expended }) => {
     const { url } = useSelector((state) => state.home);
     const navigate = useNavigate();
 
@@ -30,6 +30,11 @@ const Carousel = ({ data, loading, endpoint, title, className }) => {
             behavior: "smooth",
         });
     };
+    const [expend, setExpend] = useState(false);
+
+    useEffect(()=>{
+        setExpend(expended)
+    },[data])
 
     const skItem = () => {
         return (
@@ -57,7 +62,7 @@ const Carousel = ({ data, loading, endpoint, title, className }) => {
                                         {title}
                                     </div>
                                 )}
-                                {data?.length >= 6 && (
+                                {!expend && data?.length >= 6 ? (
                                     <>
                                         <BsFillArrowLeftCircleFill
                                             className="carouselLeftNav arrow left-[30px] text-3xl text-black1 bg-white rounded-full border-white border-2 absolute top-[44%] translate-y-[-50%] cursor-pointer opacity-50 z-[1] hidden md:block md:hover:opacity-80"
@@ -68,9 +73,9 @@ const Carousel = ({ data, loading, endpoint, title, className }) => {
                                             onClick={() => navigation("right")}
                                         />
                                     </>
-                                )}
+                                ):''}
                                 <div
-                                    className="carouselItems max-md:scroll-pl-6 snap-x flex gap-2 md:gap-5 lg:gap-[19px] overflow-y-hidden md:overflow-hidden -mr-5 md:m-0 -ml-5 px-5 md:p-0"
+                                    className={`carouselItems max-md:scroll-pl-6 snap-x overflow-y-hidden md:overflow-hidden -mr-5 md:m-0 -ml-5 px-5 md:p-0 ${!expend ? ' flex gap-2 md:gap-5 lg:gap-[19px]':'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-x-5 gap-y-10 py-5'}`}
                                     ref={carouselContainer}
                                 >
                                     {data?.map((item) => {
@@ -85,7 +90,7 @@ const Carousel = ({ data, loading, endpoint, title, className }) => {
                                                         }/${item?.id}`
                                                     )
                                                 }
-                                                className="carouselItem snap-start w-[125px] md:w-[calc(25%-15px)] lg:w-[calc(16.66%-16px)] shrink-0 cursor-pointer delay-75 duration-300 hover:scale-95"
+                                                className={`carouselItem snap-start shrink-0 cursor-pointer delay-75 duration-300 hover:scale-95 ${!expend ? ' w-[125px] md:w-[calc(25%-15px)] lg:w-[calc(16.66%-16px)]':'w-full'}`}
                                             >
                                                 <div className="posterBlock relative w-full aspect-[1/1.5] bg-cover bg-center mb-7 flex items-end justify-between p-2">
                                                     <Img

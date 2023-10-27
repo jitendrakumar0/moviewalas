@@ -41,6 +41,10 @@ const DetailsBanner = ({
             setProvidersLoading(false);
         });
     };
+    
+    useEffect(()=>{
+        setOtt(false)
+    },[data])
 
     const handleShare = () => {
         if (navigator.share) {
@@ -66,7 +70,7 @@ const DetailsBanner = ({
             videoApiFunction();
         }
         setOtt(false);
-    }, [mediaType]);
+    }, [mediaType, id]);
 
     const relativeTime = require("dayjs/plugin/relativeTime");
     dayjs.extend(relativeTime);

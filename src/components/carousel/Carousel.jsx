@@ -134,7 +134,7 @@ const Carousel = ({ data, loading, endpoint, title, className, expended }) => {
                                                             0,
                                                             2
                                                         )}
-                                                        classNameGenres={`genres hidden md:flex gap-[5px] mb-[25px] flex-wrap flex-row`}
+                                                        classNameGenres={`genres hidden md:flex gap-[5px] mb-[25px] flex-wrap flex-row z-[1]`}
                                                         classNameGenre={`genre bg-black3 border border-gray py-[1px] px-[5px] text-[10px] rounded-[4px] text-white whitespace-nowrap`}
                                                     />
                                                 </div>

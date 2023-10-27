@@ -7,15 +7,24 @@ import Spinner from "../../components/spinner/Spinner";
 
 import MovieCard from "../../components/movieCard/MovieCard";
 import PersonCard from "../../components/personCard/PersonCard";
+import CollectionCard from "../../components/collectionCard/CollectionCard";
 const SearchResult = ({ websiteName }) => {
     const [data, setData] = useState(null);
+    const [collectionData, setcollectionData] = useState(null);
     const [pageNum, setPageNum] = useState(1);
     const [loading, setLoading] = useState(false);
     const { query } = useParams();
 
     const fetchInitialData = () => {
         setLoading(true);
-        fetchDataFromApi(`/search/multi?query=${query}&page=${pageNum}`).then(
+        fetchDataFromApi(
+            `/search/collection?query=${query}&include_adult=true&page=${pageNum}`
+        ).then((res) => {
+            setPageNum((prev) => prev + 1);
+            setcollectionData(res);
+            // setLoading(false);
+        });
+        fetchDataFromApi(`/search/multi?query=${query}&include_adult=true&page=${pageNum}`).then(
             (res) => {
                 setPageNum((prev) => prev + 1);
                 setData(res);
@@ -25,12 +34,12 @@ const SearchResult = ({ websiteName }) => {
     };
 
     const fetchNextData = () => {
-        fetchDataFromApi(`/search/multi?query=${query}&page=${pageNum}`).then(
+        fetchDataFromApi(`/search/multi?query=${query}&include_adult=true&page=${pageNum}`).then(
             (res) => {
                 if (data?.results) {
                     setData({
                         ...data,
-                        results: [...data?.results, ...res.results],
+                        results: [...data?.results, ...res?.results],
                     });
                 } else {
                     setData(res);
@@ -61,14 +70,26 @@ const SearchResult = ({ websiteName }) => {
                                     of <b>"{query}"</b>
                                 </div>
                                 <InfiniteScroll
-                                    className="content grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-y-10 gap-x-4 h-auto overflow-y-auto mb-12"
+                                    className="content grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-y-10 gap-x-4 h-auto overflow-y-auto mb-12"
                                     dataLength={data?.results?.length || []}
                                     next={fetchNextData}
                                     hasMore={pageNum <= data?.total_pages}
                                     loader={<Spinner />}
                                 >
+                                    {collectionData?.results?.map(
+                                        (item, index) => {
+                                            return (
+                                                <CollectionCard
+                                                    className={`w-full shrink-0`}
+                                                    key={index}
+                                                    data={item}
+                                                    fromSearch={true}
+                                                />
+                                            );
+                                        }
+                                    )}
                                     {data?.results?.map((item, index) => {
-                                        if(item.media_type === "person") {
+                                        if (item?.media_type === "person") {
                                             return (
                                                 <PersonCard
                                                     className={`w-full shrink-0`}
@@ -76,8 +97,8 @@ const SearchResult = ({ websiteName }) => {
                                                     data={item}
                                                     fromSearch={true}
                                                 />
-                                            )
-                                        };
+                                            );
+                                        }
                                         return (
                                             <MovieCard
                                                 className={`w-full shrink-0`}

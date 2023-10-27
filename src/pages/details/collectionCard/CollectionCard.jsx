@@ -4,10 +4,14 @@ import PosterFallback from "../../../assets/no-poster.png";
 import { useSelector } from "react-redux";
 import { fetchDataFromApi } from "../../../utils/api";
 import { useNavigate } from "react-router-dom";
+import CollectionDetailsBanner from "./collectionDetailBanner/CollectionDetailBanner";
+import { AiFillCloseCircle } from "react-icons/ai";
 
-const CollectionCard = ({ data, collectionId, loading }) => {
+const CollectionCard = ({ data, loading, collectionId }) => {
     const [collection, setCollection] = useState("");
     const [collectionLoadings, setCollectionLoadings] = useState("");
+    const [collectionDetailPopup, setCollectionDetailPopup] = useState(false);
+
     const navigate = useNavigate();
 
     const collectionDataFunction = () => {
@@ -24,6 +28,9 @@ const CollectionCard = ({ data, collectionId, loading }) => {
             collectionDataFunction();
         }
     }, [collectionId]);
+    useEffect(()=>{
+        setCollectionDetailPopup(false);
+    },[data])
     return (
         <>
             {!loading ? (
@@ -161,8 +168,8 @@ const CollectionCard = ({ data, collectionId, loading }) => {
                                                 <div
                                                     className="w-[150px] sm:w-[200px] text-center cursor-pointer text-xs sm:text-base py-2 px-4 sm:px-5 border-2 border-solid rounded-full mr-auto font-bold border-white/40 text-white bg-black1/60 hover:bg-white/10"
                                                     onClick={() =>
-                                                        navigate(
-                                                            `/collection/${collection?.id}`
+                                                        setCollectionDetailPopup(
+                                                            !collectionDetailPopup
                                                         )
                                                     }
                                                 >
@@ -174,6 +181,24 @@ const CollectionCard = ({ data, collectionId, loading }) => {
                                 </div>
                             </div>
                         </>
+                    )}
+                    {collectionDetailPopup && (
+                        <div className="grow flex w-screen h-screen fixed inset-0 z-10 backdrop-blur-md">
+                            <div className="w-full sm:max-w-[650px] md:max-w-[750px] lg:max-w-[900px] xl:max-w-[1200px] h-full sm:h-[calc(100%-40px)] md:h-[calc(100%-100px)] m-auto relative z-[1]">
+                                <div
+                                    className="closeBtn absolute top-0 right-0 -translate-x-1/2 sm:translate-x-1/3 translate-y-1/2 sm:-translate-y-1/3 cursor-pointer z-10 shadow-2xl max-sm:hidden"
+                                    onClick={() =>
+                                        setCollectionDetailPopup(
+                                            !collectionDetailPopup
+                                        )
+                                    }
+                                >
+                                    <AiFillCloseCircle className="text-white text-2xl md:text-4xl rounded-full bg-black1" />
+                                </div>
+                                <CollectionDetailsBanner data={collection} collectionDetailPopup={collectionDetailPopup} setCollectionDetailPopup={setCollectionDetailPopup} />
+                            </div>
+                            <div className="backdropLayer fixed inset-0 z-0 bg-white/30"></div>
+                        </div>
                     )}
                 </>
             ) : (

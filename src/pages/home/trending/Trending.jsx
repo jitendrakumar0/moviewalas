@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SwitchTabs from "../../../components/switchTabs/SwitchTabs";
 import useFetch from "../../../hooks/useFetch";
 import Carousel from "../../../components/carousel/Carousel";
@@ -6,7 +6,15 @@ import Carousel from "../../../components/carousel/Carousel";
 const Trending = () => {
     const [endpoint, setEndpoint] = useState("day");
 
-    const { data, loading } = useFetch(`/trending/all/${endpoint}`);
+    const { data, loading } = useFetch(`/trending/all/${endpoint}?include_adult=false`);
+    // const [filteredData, setFilteredData] = useState();
+
+    // useEffect(()=> {
+    //     if(data?.results) {
+    //         const filterData = data?.results?.filter((item)=> item?.adult === true)
+    //         setFilteredData(filterData)
+    //     }
+    // }, [data])
 
     const onTabChange = (tab) => {
         setEndpoint(tab === "Day" ? "day" : "week");

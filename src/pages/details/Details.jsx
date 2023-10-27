@@ -247,20 +247,28 @@ const Details = () => {
                                         Cast & Crew
                                     </span>
                                 </div>
-                                <div
-                                    className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
-                                        navTabs === "More"
-                                            ? "active:bg-pink/40 bg-pink/40"
-                                            : ""
-                                    }`}
-                                    onClick={() => {
-                                        setNavTabs("More");
-                                    }}
-                                >
-                                    <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
-                                        More
-                                    </span>
-                                </div>
+                                {!loading && (
+                                    <>
+                                        {(data?.budget || data?.revenue) && (
+                                            <>
+                                                <div
+                                                    className={`max-md:grow group-[]/ui:md:grow group-[]/ui2:px-2 group-[]/ui2:md:px-6 text-center py-1 group-[]:py-3 duration-300 group-[]/ui:rounded-t-xl group cursor-pointer border-b-2 md:border-b-4 border-pink/30 ${
+                                                        navTabs === "More"
+                                                            ? "active:bg-pink/40 bg-pink/40"
+                                                            : ""
+                                                    }`}
+                                                    onClick={() => {
+                                                        setNavTabs("More");
+                                                    }}
+                                                >
+                                                    <span className="text-white text-xs md:text-sm uppercase font-semibold hover:group-[]:text-gray-light duration-200">
+                                                        More
+                                                    </span>
+                                                </div>
+                                            </>
+                                        )}
+                                    </>
+                                )}
                             </>
                         ) : (
                             <>
@@ -359,9 +367,14 @@ const Details = () => {
                     {navTabs === "Overview" && (
                         <>
                             <CollectionCard
+                                id={id}
                                 data={data}
-                                collectionId={data?.belongs_to_collection?.id}
                                 loading={loading}
+                                credits={creditsData}
+                                mediaType={mediaType}
+                                videoData={videoData}
+                                dataRef={DetailsBannerDiv}
+                                collectionId={data?.belongs_to_collection?.id}
                             />
                         </>
                     )}
@@ -426,12 +439,19 @@ const Details = () => {
                             />
                         </>
                     )}
-                    {navTabs === "More" && (
-                        <More
-                            id={id}
-                            data={data}
-                            loading={loading}
-                        />
+                    {!loading && (
+                        <>
+                            {(data?.budget || data?.revenue) && (
+                                <>
+                                    {navTabs === "More" && (
+                                        <More
+                                            data={data}
+                                            loading={loading}
+                                        />
+                                    )}
+                                </>
+                            )}
+                        </>
                     )}
                 </>
             )}
